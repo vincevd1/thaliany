@@ -1,0 +1,28 @@
+.welcome-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    margin-bottom: 5em;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-photo {
+    height: 16em;
+    width: 16em;
+    object-fit: cover;
+
+    margin: 2em 2em 1em 2em;
+    border-radius: 50%;
+}
+
+.welcome-header {
+    text-align: center;
+}
+
+.overview-header {
+    font-size: 2.5em;
+    margin-bottom: 1em;
+}

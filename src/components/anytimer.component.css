@@ -1,0 +1,26 @@
+.anytimer {
+    display: flex;
+
+    min-height: 4em;
+    margin: 1em 0;
+    padding: 1em 1.5em;
+    border-radius: 0.5em;
+
+    background-color: var(--light-black);
+}
+
+.anytimer-info {
+    display: flex;
+    align-items: center;
+}
+
+.anytimer-info > span {
+    min-width: 10em;
+    margin-right: 5em;
+}
+
+.use-anytimer {
+    margin-left: auto;
+
+    width: 6em;
+}

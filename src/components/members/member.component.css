@@ -1,0 +1,29 @@
+.member {
+    display: flex;
+    justify-content: space-between;
+
+    height: 4em;
+    margin: 1em 0;
+    padding: 1em 1.5em;
+    border-radius: 0.5em;
+
+    background-color: var(--light-black);
+}
+
+.member-info {
+    display: flex;
+    align-items: center;
+}
+
+.member-info > span {
+    min-width: 10em;
+    margin-left: 5em;
+}
+
+.member-photo {
+    border-radius: 50%;
+    
+    height: 2em;
+    width: 2em;
+    object-fit: cover;
+}

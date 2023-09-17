@@ -1,0 +1,32 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    height: 5em;
+    width: 100%;
+
+    font-size: 1.25em;
+    border-bottom: 5px solid #d63384;
+
+    background-color: var(--thalia-black);
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 100%;
+    width: var(--width);
+
+    margin: 0 auto;
+}
+
+.header-nav {
+    display:flex;
+    width: 20em;
+    margin-left: auto;
+    justify-content: space-between;
+    align-items: center;
+}

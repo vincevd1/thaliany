@@ -1,0 +1,22 @@
+.error-page {
+    display: flex;
+    width: 100%;
+    height: 80vh;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.error-page > div {
+    display: flex;
+    padding: 0 2em;
+    height: 4em;
+    align-items: center;
+    
+    font-size: 1.5em;
+    font-weight: 900;
+}
+
+.error-code {
+    border-right: 2px solid var(--white);
+}

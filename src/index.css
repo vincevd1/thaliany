@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+:root {
+    --font: 'Rubik', sans-serif;
+
+    --thalia-pink: #e62272;
+    --pink-highlight: #eb4e8e;
+    --thalia-black: #111;
+    --light-black: #212121;
+
+    --white: #fff;
+    --white-highlight: #cccccc;
+
+    --width: 60%;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--thalia-black);
+    color: var(--white);
+
+    font-family: var(--font);
+}
+
+main {
+    width: var(--width);
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+    color: var(--white);
+}
+
+a:hover {
+    color: var(--white-highlight);
+}
+
+button {
+    padding: 0.5em 1em;
+
+    border-radius: 0.25em;
+    border: none;
+
+    background-color: var(--thalia-pink);
+    color: var(--white);
+
+    font-weight: 900;
+}
+
+button:hover {
+    background-color: var(--pink-highlight);
+    cursor: pointer;
+}
