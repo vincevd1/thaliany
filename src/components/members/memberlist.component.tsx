@@ -26,8 +26,9 @@ export default function MemberList() {
     }
 
     function handleScroll() {
-        const bottom = window.innerHeight + window.scrollY == document.documentElement.scrollHeight
+        const bottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight
         if (bottom && !isFetching) {
+            console.log('bottom')
             setIsFetching(true);
         }
     }
