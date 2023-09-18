@@ -27,11 +27,10 @@ class _APIService {
     }
 
     generateAuthLink(): string {
-        let authLink = new URL(this.concrexit_uri);
+        const authLink = new URL(this.concrexit_uri);
         authLink.pathname = this.auth_path;
 
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
         const values = new Uint32Array(48);
         window.crypto.getRandomValues(values);
         

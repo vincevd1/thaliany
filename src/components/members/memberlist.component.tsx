@@ -11,6 +11,7 @@ export default function MemberList() {
     async function getMemberList() {
         let newMembers: Members;
 
+        // is there a next link then load it, if not but there are no members loaded yet this is the first load, load them otherwise there are no more members to load.
         if(next) {
             //replace base url since the next property still has the concrexit uri attached.
             newMembers = await APIService.get<Members>(next.replace(import.meta.env.VITE_CONCREXIT_URI, ''))
