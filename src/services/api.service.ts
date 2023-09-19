@@ -86,6 +86,7 @@ class _APIService {
             return req.data
         } catch(error: any) {
             // window.location.href = '/api/error';
+            window.location.reload();
             throw new Error(error);
         }
     }
@@ -103,6 +104,7 @@ class _APIService {
             return req.data
         } catch(error: any) {
             // window.location.href = '/api/error';
+            window.location.reload();
             throw new Error(error)
         }
     }

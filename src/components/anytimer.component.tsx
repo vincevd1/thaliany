@@ -7,10 +7,11 @@ import { AnyTimer } from "../models/anytimer.model";
 interface Props {
     AnyTimer: AnyTimer,
     direction: 'outgoing' | 'incoming'
+    type: 'confirmed' | 'request'
 }
 
 //todo change type to anytimer model
-export default function AnyTimerComponent({ AnyTimer, direction }: Props) {
+export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) {
     const [displayName, setDisplayName] = useState('');
 
     useEffect(() => {
@@ -35,10 +36,30 @@ export default function AnyTimerComponent({ AnyTimer, direction }: Props) {
                 <span>Type: {AnyTimer.type}</span>
                 <span>Description: {AnyTimer.description}</span>
             </div>
-            { direction == 'outgoing' ? (
-                <button className="use-anytimer">
-                    USE
-                </button>
+            {
+                type == 'confirmed' && direction == 'outgoing' ? (
+                    <button className="anytimer-button">
+                        USE
+                    </button>
+                ) : null
+            }
+            {
+                type == 'request' && direction == 'incoming' ? (
+                    <>
+                        <button className="anytimer-button">
+                            ACCEPT
+                        </button>
+                        <button className="anytimer-button">
+                            DECLINE
+                        </button>
+                    </>
+                ) : null
+            }
+            {    
+                type == 'request' && direction == 'outgoing' ? (
+                    <button className="anytimer-button">
+                        REVOKE
+                    </button>
                 ) : null
             }
         </div>

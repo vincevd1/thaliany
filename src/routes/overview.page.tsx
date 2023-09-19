@@ -45,9 +45,9 @@ export default function Overview() {
                 <h2 className="overview-header">Overview</h2>
 
                 <h2>Outgoing anytimers</h2>
-                <AnyTimerList direction={'outgoing'} />
+                <AnyTimerList list_type='confirmed' direction='outgoing' />
                 <h2>Incoming anytimers</h2>
-                <AnyTimerList direction={'incoming'} />
+                <AnyTimerList list_type='confirmed' direction='incoming' />
             </>
         )
     } else {

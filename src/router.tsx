@@ -6,6 +6,7 @@ import AuthCallback from './routes/auth/callback.page.tsx'
 import Overview from './routes/overview.page.tsx'
 import APIError from './routes/api/error.page.tsx'
 import Members from './routes/members/members.page.tsx'
+import Requests from './routes/requests/requests.page.tsx'
 
 const router = createBrowserRouter([
 	{
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
 			{
 				path: '/members',
 				element: <Members />
+			},
+			{
+				path: '/requests',
+				element: <Requests />
 			},
 			{
 				path: '/api/error',

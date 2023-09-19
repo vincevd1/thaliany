@@ -9,7 +9,14 @@ export default function Header() {
                 <div className="header-nav">
                     <a href="/requests">Requests</a>
                     <a href="/members">Members</a>
-                    <button onClick={User.logout}>LOGOUT</button>
+
+                    {
+                        User.getIsLoggedIn ? (
+                            <button onClick={User.logout}>LOGOUT</button>
+                        ) : (
+                            <button onClick={User.login}>LOGIN</button>
+                        )
+                    }   
                 </div>
             </div>
         </header>

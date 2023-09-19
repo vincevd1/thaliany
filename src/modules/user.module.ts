@@ -56,7 +56,7 @@ class _User {
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('expires')
 
-        window.location.reload();
+        window.location.href = '/';
     }
 
     get getIsLoggedIn() {

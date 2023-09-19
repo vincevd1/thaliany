@@ -7,15 +7,15 @@ let outgoingAnytimers = [
 		recipient_id: 205,
 		amount: 1,
 		type: 'Beer',
-		description: 'Lekker voor je'
+		description: `Broek uit op je hoofd`
 	},
 	{
 		id: 1,
 		owner_id: 205,
 		recipient_id: 112,
 		amount: 2,
-		type: 'Beer',
-		description: 'Lekker voor je'
+		type: 'Other',
+		description: `Trek 'n bak`
 	}
 ]
 
@@ -31,29 +31,54 @@ let incomingAnytimers = [
 	{
 		id: 1,
 		owner_id: 1,
-		recipient_id: 112,
+		recipient_id: 205,
 		amount: 2,
 		type: 'Beer',
-		description: 'Lekker voor je'
+		description: `Trek 'n bak`
 	}
 ]
 
-export default function AnyTimerList({ direction }: any) {
-	if(direction == 'outgoing') {
-		return (
-			<>
-				{
-					outgoingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} key={anytimer.id} />)
-				}
-			</>
-		)
-	} else {
-		return (
-			<>
-				{
-					incomingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} key={anytimer.id} />)
-				}
-			</>
-		)
+interface ListProps {
+	list_type: 'confirmed' | 'request' 
+	direction: 'incoming' | 'outgoing'
+}
+
+export default function AnyTimerList({ list_type, direction }: ListProps) {
+	if(list_type == 'request') {
+		if(direction == 'outgoing') {
+			return (
+				<>
+					{
+						outgoingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
+					}
+				</>
+			)
+		} else {
+			return (
+				<>
+					{
+						incomingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
+					}
+				</>
+			)
+		}
+	} else if(list_type == 'confirmed') {
+		if(direction == 'outgoing') {
+			return (
+				<>
+					{
+						outgoingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
+					}
+				</>
+			)
+		} else {
+			return (
+				<>
+					{
+						incomingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
+					}
+				</>
+			)
+		}
 	}
 }
