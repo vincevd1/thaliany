@@ -46,10 +46,10 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
             {
                 type == 'request' && direction == 'incoming' ? (
                     <>
-                        <button className="anytimer-button">
+                        <button id="accept" className="anytimer-button">
                             ACCEPT
                         </button>
-                        <button className="anytimer-button">
+                        <button id="decline" className="anytimer-button">
                             DECLINE
                         </button>
                     </>

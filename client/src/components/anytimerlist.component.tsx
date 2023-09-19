@@ -6,7 +6,7 @@ let outgoingAnytimers = [
 		owner_id: 205,
 		recipient_id: 205,
 		amount: 1,
-		type: 'Beer',
+		type: 'Other',
 		description: `Broek uit op je hoofd`
 	},
 	{
@@ -14,7 +14,7 @@ let outgoingAnytimers = [
 		owner_id: 205,
 		recipient_id: 112,
 		amount: 2,
-		type: 'Other',
+		type: 'Beer',
 		description: `Trek 'n bak`
 	}
 ]

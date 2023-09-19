@@ -24,3 +24,19 @@
 
     width: 6em;
 }
+
+.anytimer-button#accept {
+    background-color: #09c803;
+}
+
+.anytimer-button#decline {
+    background-color: #c83803;
+}
+
+.anytimer-button#accept:hover {
+    background-color: #10e908;
+}
+
+.anytimer-button#decline:hover {
+    background-color: #e2470e;
+}
