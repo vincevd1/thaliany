@@ -3,6 +3,7 @@ import Credentials from "../models/credentials.model";
 import User from "../modules/user.module";
 
 class _APIService {
+    backend_uri: string;
     concrexit_uri: string;
     auth_path: string;
     token_path: string;
@@ -11,6 +12,7 @@ class _APIService {
     code_challenge: string;
 
     constructor(
+        backend_uri: string,
         concrexit_uri: string,
         auth_path: string,
         token_path: string,
@@ -18,11 +20,12 @@ class _APIService {
         redirect_uri: string,
         code_challenge: string | null
     ) {
-        this.concrexit_uri = concrexit_uri,
-        this.auth_path = auth_path,
-        this.token_path = token_path,
-        this.client_id = client_id,
-        this.redirect_uri = redirect_uri
+        this.backend_uri = backend_uri;
+        this.concrexit_uri = concrexit_uri;
+        this.auth_path = auth_path;
+        this.token_path = token_path;
+        this.client_id = client_id;
+        this.redirect_uri = redirect_uri;
         this.code_challenge = code_challenge || "";
     }
 
@@ -73,11 +76,12 @@ class _APIService {
         return req.data;
     }
 
-    async get<T>(path: string): Promise<T> {
+    async get<T>(base: 'concrexit' | 'backend', path: string): Promise<T> {
         console.info("GET")
+        const base_uri = base == 'concrexit' ? this.concrexit_uri : this.backend_uri;
 
         try {
-            const req = await axios.get(`${this.concrexit_uri}${path}`, {
+            const req = await axios.get(`${base_uri}${path}`, {
                 headers: {
                     'Authorization': `Bearer ${User.getAccessToken}`
                 }
@@ -86,16 +90,17 @@ class _APIService {
             return req.data
         } catch(error: any) {
             // window.location.href = '/api/error';
-            window.location.reload();
+            // window.location.reload();
             throw new Error(error);
         }
     }
 
-    async post<T>(path: string, data: any): Promise<T> {
+    async post<T>(base: 'concrexit' | 'backend', path: string, data: any): Promise<T> {
         console.info("POST")
+        const base_uri = base == 'concrexit' ? this.concrexit_uri : this.backend_uri;
 
         try {
-            const req = await axios.post(`${this.concrexit_uri}${path}`, data, {
+            const req = await axios.post(`${base_uri}${path}`, data, {
                 headers: {
                     'Authorization': `Bearer ${User.getAccessToken}`
                 }
@@ -104,13 +109,14 @@ class _APIService {
             return req.data
         } catch(error: any) {
             // window.location.href = '/api/error';
-            window.location.reload();
+            // window.location.reload();
             throw new Error(error)
         }
     }
 }
 
 const APIService = new _APIService(
+    import.meta.env.VITE_BACKEND_URI,
     import.meta.env.VITE_CONCREXIT_URI,
     import.meta.env.VITE_AUTH_PATH,
     import.meta.env.VITE_TOKEN_PATH,

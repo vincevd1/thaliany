@@ -1,4 +1,4 @@
-export interface AnyTimer {
+export default interface AnyTimer {
     id: number
     owner_id: number
     recipient_id: number

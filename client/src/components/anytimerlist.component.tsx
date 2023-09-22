@@ -1,4 +1,6 @@
-import AnyTimer from "./anytimer.component"
+import { useEffect, useState } from "react"
+import AnyTimerComponent from "./anytimer.component"
+import AnyTimer from '../models/anytimer.model'
 
 let outgoingAnytimers = [
 	{
@@ -39,46 +41,36 @@ let incomingAnytimers = [
 ]
 
 interface ListProps {
-	list_type: 'confirmed' | 'request' 
+	list_type: 'confirmed' | 'request'
 	direction: 'incoming' | 'outgoing'
 }
 
 export default function AnyTimerList({ list_type, direction }: ListProps) {
-	if(list_type == 'request') {
-		if(direction == 'outgoing') {
-			return (
-				<>
-					{
-						outgoingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
-					}
-				</>
-			)
-		} else {
-			return (
-				<>
-					{
-						incomingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
-					}
-				</>
-			)
+	const [anytimerList, setAnytimerList] = useState<AnyTimer[]>()
+
+	useEffect(() => {
+		if (list_type == 'request') {
+			if (direction == 'incoming') {
+				setAnytimerList(incomingAnytimers);
+			} else if (direction == 'outgoing') {
+				setAnytimerList(outgoingAnytimers);
+			}
+		} else if (list_type == 'confirmed') {
+			if (direction == 'incoming') {
+				setAnytimerList(incomingAnytimers);
+			} else if (direction == 'outgoing') {
+				setAnytimerList(outgoingAnytimers);
+			}
 		}
-	} else if(list_type == 'confirmed') {
-		if(direction == 'outgoing') {
-			return (
-				<>
-					{
-						outgoingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
-					}
-				</>
-			)
-		} else {
-			return (
-				<>
-					{
-						incomingAnytimers.map(anytimer => <AnyTimer AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
-					}
-				</>
-			)
-		}
-	}
+	})
+
+	return (
+		<>
+			{
+				anytimerList ? (
+					anytimerList.map(anytimer => <AnyTimerComponent AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
+				): null
+			}
+		</>
+	)
 }

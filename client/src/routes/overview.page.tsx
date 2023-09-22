@@ -13,7 +13,7 @@ export default function Overview() {
 
     useEffect(() => {
         async function getAvatar() {
-            const thaliaUser: ThaliaUser = await APIService.get<ThaliaUser>('/api/v2/members/me')
+            const thaliaUser: ThaliaUser = await APIService.get<ThaliaUser>('concrexit', '/api/v2/members/me')
 
             setAvatar(thaliaUser.profile.photo.large);
             setDisplayName(thaliaUser.profile.display_name);
