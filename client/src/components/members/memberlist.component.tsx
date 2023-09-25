@@ -14,9 +14,9 @@ export default function MemberList() {
         // is there a next link then load it, if not but there are no members loaded yet this is the first load, load them otherwise there are no more members to load.
         if(next) {
             //replace base url since the next property still has the concrexit uri attached.
-            newMembers = await APIService.get<Members>(next.replace(import.meta.env.VITE_CONCREXIT_URI, ''))
+            newMembers = await APIService.get<Members>('concrexit', next.replace(import.meta.env.VITE_CONCREXIT_URI, ''))
         } else if(!next && membersLists.length == 0) {
-            newMembers = await APIService.get<Members>('/api/v2/members?limit=20')
+            newMembers = await APIService.get<Members>('concrexit', '/api/v2/members?limit=20')
         } else {
             return;
         }

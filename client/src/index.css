@@ -51,6 +51,7 @@ button {
     color: var(--white);
 
     font-weight: 900;
+    text-align: center;
 }
 
 button:hover {

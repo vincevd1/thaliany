@@ -15,18 +15,19 @@
 }
 
 .anytimer-info > span {
-    min-width: 10em;
+    width: 9em;
     margin-right: 5em;
 }
 
-.anytimer-button {
+.anytimer-buttons {
     margin-left: auto;
 
-    width: 6em;
+    /* width: 6em; */
 }
 
 .anytimer-button#accept {
     background-color: #09c803;
+    margin-right: 2em;
 }
 
 .anytimer-button#decline {

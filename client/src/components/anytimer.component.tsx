@@ -34,34 +34,36 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
                 <span>{displayName}</span>
                 <span>Amount: {AnyTimer.amount}</span>
                 <span>Type: {AnyTimer.type}</span>
-                <span>Description: {AnyTimer.description}</span>
+                {/* <span>Description: {AnyTimer.description}</span> */}
             </div>
-            {
-                type == 'confirmed' && direction == 'outgoing' ? (
-                    <button className="anytimer-button">
-                        USE
-                    </button>
-                ) : null
-            }
-            {
-                type == 'request' && direction == 'incoming' ? (
-                    <>
-                        <button id="accept" className="anytimer-button">
-                            ACCEPT
+            <div className="anytimer-buttons">
+                {
+                    type == 'confirmed' && direction == 'outgoing' ? (
+                        <button className="anytimer-button">
+                            USE
                         </button>
-                        <button id="decline" className="anytimer-button">
-                            DECLINE
+                    ) : null
+                }
+                {
+                    type == 'request' && direction == 'incoming' ? (
+                        <>
+                            <button id="accept" className="anytimer-button">
+                                ACCEPT
+                            </button>
+                            <button id="decline" className="anytimer-button">
+                                DECLINE
+                            </button>
+                        </>
+                    ) : null
+                }
+                {
+                    type == 'request' && direction == 'outgoing' ? (
+                        <button className="anytimer-button">
+                            REVOKE
                         </button>
-                    </>
-                ) : null
-            }
-            {    
-                type == 'request' && direction == 'outgoing' ? (
-                    <button className="anytimer-button">
-                        REVOKE
-                    </button>
-                ) : null
-            }
+                    ) : null
+                }
+            </div>
         </div>
     )
 }
