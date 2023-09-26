@@ -26,7 +26,7 @@ class _User {
             this.checkExpiration()
         }
 
-        console.log('test')
+        console.log('User initialized')
     }
 
     async checkExpiration(): Promise<void> {
