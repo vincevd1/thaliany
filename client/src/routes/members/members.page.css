@@ -1,3 +1,25 @@
-.members-header {
+.header-wrapper {
+    display:flex;
+    justify-content: space-between;
+
     margin: 1em 0;
+}
+
+.search-bar {
+    display: flex;
+    gap: 1em;
+
+    align-items: center;
+}
+
+.search-box {
+    all: unset;
+
+    height: 2em;
+    border-radius: 0.5em;
+    border: 2px solid var(--thalia-pink);
+    text-align: center;
+
+    color: var(--white);
+    background-color: var(--light-black);
 }

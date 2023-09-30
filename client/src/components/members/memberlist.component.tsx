@@ -3,7 +3,7 @@ import Member from "./member.component";
 import APIService from "../../services/api.service";
 import { Members } from "../../models/thalia.user.model";
 
-export default function MemberList() {
+export default function MemberList({ search }: { search: string }) {
     const [membersLists, setMembersList] = useState<Members[]>([]);
     const [isFetching, setIsFetching] = useState<boolean>(false);
     const [next, setNext] = useState<string | null>();
@@ -12,12 +12,17 @@ export default function MemberList() {
         let newMembers: Members;
 
         // is there a next link then load it, if not but there are no members loaded yet this is the first load, load them otherwise there are no more members to load.
-        if(next) {
+        if (next) {
             //replace base url since the next property still has the concrexit uri attached.
             newMembers = await APIService.get<Members>('concrexit', next.replace(import.meta.env.VITE_CONCREXIT_URI, ''))
-        } else if(!next && membersLists.length == 0) {
-            newMembers = await APIService.get<Members>('concrexit', '/api/v2/members?limit=20')
+        } else if (!next && membersLists.length == 0) {
+            if(search && search != '') {
+                newMembers = await APIService.get<Members>('concrexit', `/api/v2/members?limit=20&search=${search}`)
+            } else {
+                newMembers = await APIService.get<Members>('concrexit', '/api/v2/members?limit=20')
+            }
         } else {
+            // there are no more members to load.
             return;
         }
 
@@ -29,7 +34,6 @@ export default function MemberList() {
     function handleScroll() {
         const bottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight
         if (bottom && !isFetching) {
-            console.log('bottom')
             setIsFetching(true);
         }
     }
@@ -41,7 +45,7 @@ export default function MemberList() {
     }, [])
 
     useEffect(() => {
-        if(!isFetching) return;
+        if (!isFetching) return;
         getMemberList()
     }, [isFetching])
 
@@ -50,16 +54,16 @@ export default function MemberList() {
             {
                 membersLists.length > 0 && (
                     <div className="membersList">
-                        { membersLists.map((members, index) => (
+                        {membersLists.map((members, index) => (
                             <div key={index}>
-                                { (members && members.results) ? members.results.map(member => <Member {...member} key={member.pk} />) : <></> }
+                                {(members && members.results) ? members.results.map(member => <Member {...member} key={member.pk} />) : <></>}
                             </div>
                         ))}
-                        
+
                     </div>
                 )
             }
-            
+
         </>
     )
 }
