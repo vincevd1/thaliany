@@ -97,7 +97,8 @@ app.use(async (req, res, next) => {
 
 	const user = await response.json();
 	res.locals.user = user;
-	next()
+
+	next();
 })
 
 app.get('/api/anytimers/confirmed/incoming', (req, res) => {
