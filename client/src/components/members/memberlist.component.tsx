@@ -59,11 +59,9 @@ export default function MemberList({ search }: { search: string }) {
                                 {(members && members.results) ? members.results.map(member => <Member {...member} key={member.pk} />) : <></>}
                             </div>
                         ))}
-
                     </div>
                 )
             }
-
         </>
     )
 }

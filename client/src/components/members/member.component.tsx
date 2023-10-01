@@ -1,4 +1,5 @@
 import { ThaliaUser } from '../../models/thalia.user.model'
+import Popup from '../popup.component'
 import './member.component.css'
 
 export default function Member(thalia_user: ThaliaUser) {
@@ -8,9 +9,14 @@ export default function Member(thalia_user: ThaliaUser) {
                 <img src={thalia_user.profile.photo.small} className='member-photo' />
                 <span>{thalia_user.profile.display_name}</span>
             </div>
-            <button className="request-any">
-                REQUEST ANY
-            </button>
+
+            <Popup button={
+                <button className="request-any">
+                    REQUEST ANY
+                </button>
+            }>
+                <span>test</span>
+            </Popup>
         </div>
     )
 }
