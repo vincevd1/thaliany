@@ -1,0 +1,18 @@
+.popup {
+    position: fixed;
+    display: flex;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 30em;
+    width: 50em;
+
+    background-color: var(--thalia-black);
+    border: 2px solid var(--thalia-pink);
+    border-radius: 10px;
+
+    justify-content: center;
+    align-items: center;
+}
