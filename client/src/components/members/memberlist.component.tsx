@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Member from "./member.component";
 import APIService from "../../services/api.service";
+import APIBase from "../../enums/apibase.enum";
 import { Members } from "../../models/thalia.user.model";
 
 export default function MemberList({ search }: { search: string }) {
@@ -14,12 +15,12 @@ export default function MemberList({ search }: { search: string }) {
         // is there a next link then load it, if not but there are no members loaded yet this is the first load, load them otherwise there are no more members to load.
         if (next) {
             //replace base url since the next property still has the concrexit uri attached.
-            newMembers = await APIService.get<Members>('concrexit', next.replace(import.meta.env.VITE_CONCREXIT_URI, ''))
+            newMembers = await APIService.get<Members>(APIBase.CONCREXIT, next.replace(import.meta.env.VITE_CONCREXIT_URI, ''))
         } else if (!next && membersLists.length == 0) {
             if(search && search != '') {
-                newMembers = await APIService.get<Members>('concrexit', `/api/v2/members?limit=20&search=${search}`)
+                newMembers = await APIService.get<Members>(APIBase.CONCREXIT, `/api/v2/members?limit=20&search=${search}`)
             } else {
-                newMembers = await APIService.get<Members>('concrexit', '/api/v2/members?limit=20')
+                newMembers = await APIService.get<Members>(APIBase.CONCREXIT, '/api/v2/members?limit=20')
             }
         } else {
             // there are no more members to load.

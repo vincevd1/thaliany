@@ -5,7 +5,7 @@
     margin: 1em 0;
 }
 
-.search-bar {
+.search-bar {   
     display: flex;
     gap: 1em;
 

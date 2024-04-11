@@ -1,6 +1,7 @@
 import { ThaliaUser } from '../../models/thalia.user.model'
 import Popup from '../popup.component'
 import './member.component.css'
+import './confirmation.popup.css'
 
 export default function Member(thalia_user: ThaliaUser) {
     return (
@@ -10,12 +11,19 @@ export default function Member(thalia_user: ThaliaUser) {
                 <span>{thalia_user.profile.display_name}</span>
             </div>
 
-            <Popup button={
+            <Popup title="Are you sure?" button={
                 <button className="request-any">
-                    REQUEST ANY
+                    GIVE ANY
                 </button>
             }>
-                <span>test</span>
+                <div className="button-wrapper">
+                    <button className="confirm-button confirmation-button">
+                        Confirm
+                    </button>
+                    <button className="cancel-button confirmation-button">
+                        Cancel
+                    </button>
+                </div>
             </Popup>
         </div>
     )

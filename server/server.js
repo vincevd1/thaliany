@@ -3,51 +3,9 @@ require('dotenv').config()
 const express = require('express');
 const cors = require('cors')
 const app = express();
+const database = require('./database.js');
 
 let confirmedAnyTimers = [
-	{
-		id: 0,
-		owner_id: 205,
-		recipient_id: 205,
-		amount: 1,
-		type: 'Other',
-		description: `Broek uit op je hoofd`
-	},
-	{
-		id: 1,
-		owner_id: 205,
-		recipient_id: 112,
-		amount: 2,
-		type: 'Beer',
-		description: `Trek 'n bak`
-	},
-	{
-		id: 2,
-		owner_id: 1,
-		recipient_id: 205,
-		amount: 1,
-		type: 'Beer',
-		description: `Trek 'n bak`
-	},
-	{
-		id: 1,
-		owner_id: 1,
-		recipient_id: 205,
-		amount: 2,
-		type: 'Beer',
-		description: `Trek 'n bak`
-	}
-]
-
-let requestedAnyTimers = [
-	{
-		id: 0,
-		owner_id: 205,
-		recipient_id: 205,
-		amount: 1,
-		type: 'Other',
-		description: `Broek uit op je hoofd`
-	},
 	{
 		id: 1,
 		owner_id: 205,
@@ -104,6 +62,8 @@ app.use(async (req, res, next) => {
 app.get('/api/anytimers/confirmed/incoming', (req, res) => {
 	const anyTimer = confirmedAnyTimers.filter(anytimer => anytimer.recipient_id == res.locals.user.pk);
 
+	console.log(res.locals.user)
+
 	res.send(anyTimer)
 })
 
@@ -113,17 +73,21 @@ app.get('/api/anytimers/confirmed/outgoing', (req, res) => {
 	res.send(anyTimer)
 })
 
-app.get('/api/anytimers/requests/incoming', (req, res) => {
-	const anyTimer = requestedAnyTimers.filter(anytimer => anytimer.recipient_id == res.locals.user.pk);
-
+app.get('/api/anytimes/send', (req, res) => {
 	res.send(anyTimer)
 })
 
-app.get('/api/anytimers/requests/outgoing', (req, res) => {
-	const anyTimer = requestedAnyTimers.filter(anytimer => anytimer.owner_id == res.locals.user.pk);
+// app.get('/api/anytimers/requests/incoming', (req, res) => {
+// 	const anyTimer = requestedAnyTimers.filter(anytimer => anytimer.recipient_id == res.locals.user.pk);
 
-	res.send(anyTimer)
-})
+// 	res.send(anyTimer)
+// })
+
+// app.get('/api/anytimers/requests/outgoing', (req, res) => {
+// 	const anyTimer = requestedAnyTimers.filter(anytimer => anytimer.owner_id == res.locals.user.pk);
+
+// 	res.send(anyTimer)
+// })
 
 app.listen(3000, () => {
     console.log("Listening on port 3000")

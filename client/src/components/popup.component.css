@@ -1,18 +1,41 @@
 .popup {
     position: fixed;
-    display: flex;
 
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
-    height: 30em;
-    width: 50em;
+    /* min-height: 15em; */
+    min-width: 25em;
+    padding: 1.5em;
 
     background-color: var(--thalia-black);
     border: 2px solid var(--thalia-pink);
     border-radius: 10px;
+}
+
+.popup-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 1em;
+}
+
+.popup-content {
+    display: flex;
+    flex-direction: column;
 
     justify-content: center;
     align-items: center;
+}
+
+.close-popup {
+    font-size: 1.5em;
+}
+
+.close-popup:hover {
+    cursor: pointer;
+    color: var(--white-highlight);
 }

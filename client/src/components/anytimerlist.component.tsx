@@ -2,25 +2,7 @@ import { useEffect, useState } from "react"
 import AnyTimerComponent from "./anytimer.component"
 import AnyTimer from '../models/anytimer.model'
 import APIService from "../services/api.service"
-
-let outgoingAnytimers = [
-	{
-		id: 0,
-		owner_id: 205,
-		recipient_id: 205,
-		amount: 1,
-		type: 'Other',
-		description: `Broek uit op je hoofd`
-	},
-	{
-		id: 1,
-		owner_id: 205,
-		recipient_id: 112,
-		amount: 2,
-		type: 'Beer',
-		description: `Trek 'n bak`
-	}
-]
+import APIBase from "../enums/apibase.enum"
 
 interface ListProps {
 	list_type: 'confirmed' | 'request'
@@ -33,10 +15,10 @@ export default function AnyTimerList({ list_type, direction }: ListProps) {
 	useEffect(() => {
 		async function fetchAnytimers() {
 			if (list_type == 'request') {
-				const list: AnyTimer[] = await APIService.get('backend', `/api/anytimers/requests/${direction}`)
+				const list: AnyTimer[] = await APIService.get(APIBase.BACKEND, `/api/anytimers/requests/${direction}`)
 				setAnytimerList(list);
 			} else if (list_type == 'confirmed') {
-				const list: AnyTimer[] = await APIService.get('backend', `/api/anytimers/confirmed/${direction}`)
+				const list: AnyTimer[] = await APIService.get(APIBase.BACKEND, `/api/anytimers/confirmed/${direction}`)
 				setAnytimerList(list);
 			}
 		}

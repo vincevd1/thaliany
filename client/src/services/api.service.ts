@@ -1,6 +1,7 @@
 import axios from "axios";
 import Credentials from "../models/credentials.model";
 import User from "../modules/user.module";
+import APIBase from "../enums/apibase.enum";
 
 class _APIService {
     backend_uri: string;
@@ -76,9 +77,9 @@ class _APIService {
         return req.data;
     }
 
-    async get<T>(base: 'concrexit' | 'backend', path: string): Promise<T> {
+    async get<T>(base: APIBase, path: string): Promise<T> {
         console.info("GET")
-        const base_uri = base == 'concrexit' ? this.concrexit_uri : this.backend_uri;
+        const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
 
         try {
             const req = await axios.get(`${base_uri}${path}`, {
@@ -95,9 +96,9 @@ class _APIService {
         }
     }
 
-    async post<T>(base: 'concrexit' | 'backend', path: string, data: any): Promise<T> {
+    async post<T>(base: APIBase, path: string, data: any): Promise<T> {
         console.info("POST")
-        const base_uri = base == 'concrexit' ? this.concrexit_uri : this.backend_uri;
+        const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
 
         try {
             const req = await axios.post(`${base_uri}${path}`, data, {

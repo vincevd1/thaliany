@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { ThaliaUser } from "../models/thalia.user.model";
 import User from "../modules/user.module";
 import APIService from "../services/api.service";
+import APIBase from "../enums/apibase.enum";
 import './overview.css'
 import AnyTimerList from "../components/anytimerlist.component";
 
 export default function Overview() {
     const [avatar, setAvatar] = useState('');
     const [displayName, setDisplayName] = useState('');
-
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
+    useEffect(() => {   
         async function getAvatar() {
-            const thaliaUser: ThaliaUser = await APIService.get<ThaliaUser>('concrexit', '/api/v2/members/me')
+            const thaliaUser: ThaliaUser = await APIService.get<ThaliaUser>(APIBase.CONCREXIT, '/api/v2/members/me')
 
             setAvatar(thaliaUser.profile.photo.large);
             setDisplayName(thaliaUser.profile.display_name);
@@ -44,7 +44,7 @@ export default function Overview() {
 
                 <h2 className="overview-header">Overview</h2>
 
-                <h2>Outgoing anytimers</h2>
+                <h2>Your anytimers</h2>
                 <AnyTimerList list_type='confirmed' direction='outgoing' />
                 <h2>Incoming anytimers</h2>
                 <AnyTimerList list_type='confirmed' direction='incoming' />

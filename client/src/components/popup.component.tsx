@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import './popup.component.css'
 
-export default function Popup({ children, button }: { children: React.ReactNode, button: React.ReactElement }) {
+interface PopupProps {
+    title: string,
+    children: React.ReactNode, 
+    button: React.ReactElement
+}
+
+export default function Popup({ title, children, button }: PopupProps) {
     const [visible, setVisible] = useState<boolean>(false);
 
     return (
@@ -13,7 +19,7 @@ export default function Popup({ children, button }: { children: React.ReactNode,
                             button.props.onClick();
                         }
                         
-                        setVisible(!visible);
+                        setVisible(true);
                     }
                 })
             }
@@ -21,7 +27,13 @@ export default function Popup({ children, button }: { children: React.ReactNode,
             {
                 visible ? (
                     <div className="popup">
+                        <div className="popup-header">
+                            <h2 className="popup-title">{ title }</h2>
+                            <span className="close-popup" onClick={() => setVisible(false)}>&#x2715;</span>
+                        </div>
+                        <div className="popup-content">
                         { children }
+                        </div>
                     </div>
                 ) : null
             }

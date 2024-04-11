@@ -1,0 +1,27 @@
+.button-wrapper {
+    display: flex;
+    gap: 1em;
+
+    margin-top: 1em;
+}
+
+.confirmation-button {
+    width: 8em;
+    height: 3em;
+}
+
+.confirm-button {
+    background-color: var(--confirm-green);
+}
+
+.confirm-button:hover {
+    background-color: var(--confirm-green-highlight);
+}
+
+.cancel-button {
+    background-color: var(--cancel-red);
+}
+
+.cancel-button:hover {
+    background-color: var(--cancel-red-highlight);
+}
