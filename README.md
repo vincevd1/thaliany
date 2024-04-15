@@ -1,3 +1,3 @@
 # Thaliany
 
-Made with React + Express + Vite
+Made with React + Django + Vite
