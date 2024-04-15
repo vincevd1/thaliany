@@ -64,3 +64,15 @@ button:hover {
     background-color: var(--pink-highlight);
     cursor: pointer;
 }
+
+input, textarea, select {
+    all: unset;
+
+    height: 2em;
+    border-radius: 0.5em;
+    border: 2px solid var(--thalia-pink);
+    text-align: center;
+
+    color: var(--white);
+    background-color: var(--light-black);
+}

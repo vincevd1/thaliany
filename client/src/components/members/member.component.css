@@ -27,3 +27,8 @@
     width: 2em;
     object-fit: cover;
 }
+
+.interaction-buttons {
+    display: flex;
+    gap: 1em;
+}

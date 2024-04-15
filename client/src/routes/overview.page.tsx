@@ -12,8 +12,11 @@ export default function Overview() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {   
-        async function getAvatar() {
+        async function fetchUser() {
             const thaliaUser: ThaliaUser = await APIService.get<ThaliaUser>(APIBase.CONCREXIT, '/api/v2/members/me')
+
+            const apiTest: any = await APIService.get<any>(APIBase.BACKEND, '/api/hello_world/')
+            console.log(apiTest);
 
             setAvatar(thaliaUser.profile.photo.large);
             setDisplayName(thaliaUser.profile.display_name);
@@ -22,7 +25,7 @@ export default function Overview() {
         }
 
         if (User.getIsLoggedIn) {
-            getAvatar();
+            fetchUser();
         } else {
             setIsLoading(false);
         }

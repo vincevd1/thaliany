@@ -1,8 +1,29 @@
+form {
+    width: 65%;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5em;
+}
+
+textarea#description {
+    height: 4em;
+    resize: none;
+}
+
+select#type {
+    padding-top: 0.6em;
+}
+
 .button-wrapper {
     display: flex;
     gap: 1em;
 
     margin-top: 1em;
+    justify-content: center;
 }
 
 .confirmation-button {

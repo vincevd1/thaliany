@@ -32,7 +32,7 @@ export default function Popup({ title, children, button }: PopupProps) {
                             <span className="close-popup" onClick={() => setVisible(false)}>&#x2715;</span>
                         </div>
                         <div className="popup-content">
-                        { children }
+                            { children }
                         </div>
                     </div>
                 ) : null
