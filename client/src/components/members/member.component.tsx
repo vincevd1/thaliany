@@ -46,8 +46,14 @@ export default function Member(thalia_user: ThaliaUser) {
     function postGiveAny(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         
-        const data = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
         
+        const data = {
+            'type': formData.get('type'),
+            'description': formData.get('description'),
+            'amount': formData.get('amount'),
+        }
+
         APIService.post(APIBase.BACKEND, `/api/users/${thalia_user.pk}/give/`, data);
 
         navigate('/');
@@ -55,7 +61,15 @@ export default function Member(thalia_user: ThaliaUser) {
 
     function postRequestAny(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        
+        const formData = new FormData(event.currentTarget);
+
+        const data = {
+            'type': formData.get('type'),
+            'description': formData.get('description'),
+            'amount': formData.get('amount'),
+        }
+
         APIService.post(APIBase.BACKEND, `/api/users/${thalia_user.pk}/request/`, data)
 
         navigate('/requests');
