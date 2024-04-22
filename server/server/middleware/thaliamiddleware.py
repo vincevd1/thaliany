@@ -11,7 +11,9 @@ class ThaliaMiddleware:
                 'Authorization': request.headers['Authorization']
             })
 
-            request.thalia_user = res.content
+            content = res.json()
+            content['Authorization'] = request.headers['Authorization']
+            request.thalia_user = content
 
         response = self.get_response(request)
 

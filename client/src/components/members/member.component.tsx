@@ -26,7 +26,7 @@ export default function Member(thalia_user: ThaliaUser) {
                         <option value="wine">Wine</option>
                         <option value="other">Other</option>
                     </select>
-                    {showOtherTypeInputBox && <input type="text" name="type" id="othertype" />}
+                    {showOtherTypeInputBox && <input type="text" name="othertype" id="othertype" />}
 
                     <span>Description</span>
                     <textarea name="description" id="description" cols={30} rows={10}></textarea>
@@ -49,7 +49,7 @@ export default function Member(thalia_user: ThaliaUser) {
         const formData = new FormData(event.currentTarget);
         
         const data = {
-            'type': formData.get('type'),
+            'type': showOtherTypeInputBox ? formData.get('othertype') : formData.get('type'),
             'description': formData.get('description'),
             'amount': formData.get('amount'),
         }
@@ -65,7 +65,7 @@ export default function Member(thalia_user: ThaliaUser) {
         const formData = new FormData(event.currentTarget);
 
         const data = {
-            'type': formData.get('type'),
+            'type': showOtherTypeInputBox ? formData.get('othertype') : formData.get('type'),
             'description': formData.get('description'),
             'amount': formData.get('amount'),
         }
