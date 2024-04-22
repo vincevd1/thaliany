@@ -14,10 +14,15 @@ def give_any(request, target_id):
             'Authorization': request.thalia_user['Authorization']
         })
 
-    owner_name = res.json()['profile']['display_name']
-    recipient_name = request.thalia_user['profile']['display_name']
-
-    anyTimer.objects.create(owner_id=target_id, recipient_id=request.thalia_user['pk'], owner_name=owner_name, recipient_name=recipient_name, amount=body['amount'], type=body['type'], description=body['description'])
+    anyTimer.objects.create(
+        owner_id=target_id,
+        recipient_id=request.thalia_user['pk'],
+        owner_name=res.json()['profile']['display_name'],
+        recipient_name=request.thalia_user['profile']['display_name'],
+        amount=body['amount'],
+        type=body['type'],
+        description=body['description'],
+    )
 
     return Response(200)
 
@@ -31,10 +36,15 @@ def request_any(request, target_id):
             'Authorization': request.thalia_user['Authorization']
         })
 
-    recipient_name = res.json()['profile']['display_name']
-    requester_name = request.thalia_user['profile']['display_name']
-
-    anyTimerRequest.objects.create(requester_id=request.thalia_user['pk'], recipient_id=target_id, requester_name=requester_name, recipient_name=recipient_name, amount=body['amount'], type=body['type'], description=body['description'])
+    anyTimerRequest.objects.create(
+        requester_id=request.thalia_user['pk'],
+        recipient_id=target_id,
+        requester_name=res.json()['profile']['display_name'],
+        recipient_name=request.thalia_user['profile']['display_name'],
+        amount=body['amount'],
+        type=body['type'],
+        description=body['description'],
+    )
     return Response(200)
 
 @api_view(['GET'])
