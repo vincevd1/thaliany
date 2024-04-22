@@ -3,10 +3,14 @@ import Popup from '../popup.component'
 import './member.component.css'
 import './confirmation.popup.css'
 import '../../index.css'
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import APIService from '../../services/api.service'
+import APIBase from '../../enums/apibase.enum'
+import { useNavigate } from 'react-router-dom';
 
 export default function Member(thalia_user: ThaliaUser) {
     const [showOtherTypeInputBox, setShowOtherTypeInputBox] = useState(false);
+    const navigate = useNavigate();
 
     function toggleOtherInputBox(event: ChangeEvent<HTMLSelectElement>) {
         if(event.target.value == 'other' || showOtherTypeInputBox) setShowOtherTypeInputBox(!showOtherTypeInputBox);
@@ -39,6 +43,24 @@ export default function Member(thalia_user: ThaliaUser) {
         )
     }
 
+    function postGiveAny(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        
+        const data = new FormData(event.currentTarget);
+        
+        APIService.post(APIBase.BACKEND, `/api/users/${thalia_user.pk}/give/`, data);
+
+        navigate('/');
+    }
+
+    function postRequestAny(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        APIService.post(APIBase.BACKEND, `/api/users/${thalia_user.pk}/request/`, data)
+
+        navigate('/requests');
+    }
+
     return (
         <div className="member">
             <div className="member-info">
@@ -52,7 +74,7 @@ export default function Member(thalia_user: ThaliaUser) {
                         GIVE ANY
                     </button>
                 }>
-                    <form action="http://localhost:8000/api/users/1/give/" method="post">
+                    <form onSubmit={postGiveAny}>
                         {giveOrRequestAnyForm()}
                     </form>
                 </Popup>
@@ -62,7 +84,7 @@ export default function Member(thalia_user: ThaliaUser) {
                         REQUEST ANY
                     </button>
                 }>
-                    <form action="http://localhost:8000/api/hello_world" method="post">
+                    <form onSubmit={postRequestAny}>
                         {giveOrRequestAnyForm()}
                     </form>
                 </Popup>
