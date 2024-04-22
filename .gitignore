@@ -11,9 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
-
+# Python cash files
 __pycache__/
 *.py[cod]
+
+#django
+.sqlite3
 
 # Editor directories and files
 .vscode/*
