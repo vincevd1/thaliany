@@ -16,7 +16,7 @@ __pycache__/
 *.py[cod]
 
 #django
-.sqlite3
+db.sqlite3
 
 # Editor directories and files
 .vscode/*
