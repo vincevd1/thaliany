@@ -29,6 +29,24 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
         getThaliaInfo()
     }, [])
 
+    function postAcceptAny() {
+        APIService.post(
+            APIBase.BACKEND,
+            `/api/anytimers/requests/${AnyTimer.id}/accept/`
+        );
+    }
+    function postDenyAny() {
+        APIService.post(
+            APIBase.BACKEND,
+            `/api/anytimers/requests/${AnyTimer.id}/deny/`
+        );
+    }
+    function postRevokeAny() {
+        APIService.post(
+            APIBase.BACKEND,
+            `/api/anytimers/requests/${AnyTimer.id}/revoke/`
+        );
+    }
     return (
         <div className="anytimer">
             <div className="anytimer-info">
@@ -48,10 +66,10 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
                 {
                     type == 'request' && direction == 'incoming' ? (
                         <>
-                            <button id="accept" className="anytimer-button">
+                            <button id="accept" className="anytimer-button" onClick={postAcceptAny}>
                                 ACCEPT
                             </button>
-                            <button id="decline" className="anytimer-button">
+                            <button id="decline" className="anytimer-button" onClick={postDenyAny}>
                                 DECLINE
                             </button>
                         </>
@@ -59,7 +77,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
                 }
                 {
                     type == 'request' && direction == 'outgoing' ? (
-                        <button className="anytimer-button">
+                        <button className="anytimer-button" onClick={postRevokeAny}>
                             REVOKE
                         </button>
                     ) : null

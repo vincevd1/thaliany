@@ -47,6 +47,39 @@ def request_any(request, target_id):
     )
     return Response(200)
 
+@api_view(['POST'])
+def complete_anytimer(request, anytimer_id):
+    anytimer = anyTimer.objects.get(owner_id=request.thalia_user['pk'], id=anytimer_id)
+    anytimer.delete()
+    return Response(200)
+
+@api_view(['POST'])
+def accept_anytimer(request ,request_id):
+    anytimerrequest = anyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
+    anyTimer.objects.create(
+        owner_id=anytimerrequest.requester_id,
+        recipient_id=anytimerrequest.recipient_id,
+        owner_name=anytimerrequest.requester_name,
+        recipient_name=anytimerrequest.recipient_name,
+        amount=anytimerrequest.amount,
+        type=anytimerrequest.type,
+        description=anytimerrequest.description,
+    )
+    anytimerrequest.delete()
+    return Response(200)
+
+@api_view(['POST'])
+def deny_anytimer(request,request_id):
+    anytimerrequest = anyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
+    anytimerrequest.delete()
+    return Response(200)
+
+@api_view(['POST'])
+def revoke_request(request, request_id):
+    anytimerrequest = anyTimerRequest.objects.get(requester_id=request.thalia_user['pk'], id=request_id)
+    anytimerrequest.delete()
+    return Response(200)
+
 @api_view(['GET'])
 def fetch_requests(request, direction):
     if direction == 'incoming':

@@ -96,7 +96,7 @@ class _APIService {
         }
     }
 
-    async post<T>(base: APIBase, path: string, data: any): Promise<T> {
+    async post<T>(base: APIBase, path: string, data?: any): Promise<T> {
         console.info("POST")
         const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
 
