@@ -39,8 +39,8 @@ def request_any(request, target_id):
     anyTimerRequest.objects.create(
         requester_id=request.thalia_user['pk'],
         recipient_id=target_id,
-        requester_name=res.json()['profile']['display_name'],
-        recipient_name=request.thalia_user['profile']['display_name'],
+        requester_name=request.thalia_user['profile']['display_name'],
+        recipient_name=res.json()['profile']['display_name'],
         amount=body['amount'],
         type=body['type'],
         description=body['description'],
