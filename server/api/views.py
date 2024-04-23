@@ -48,11 +48,51 @@ def request_any(request, target_id):
     return Response(200)
 
 @api_view(['GET'])
-def fetch_requests():
+def fetch_requests(request, direction):
+    if direction == 'incoming':
+        anytimerrequests = anyTimerRequest.objects.filter(recipient_id=request.thalia_user['pk'])
+    elif direction == 'outgoing':
+        anytimerrequests = anyTimerRequest.objects.filter(requester_id=request.thalia_user['pk'])
+    else:
+        return Response(status=400, data={'message': 'Invalid direction'})
 
-    return Response(200)
+    anytimerrequests_data = []
+    for anytimerrequest in anytimerrequests:
+        anytimerrequest_data = {
+            'id': anytimerrequest.id,
+            'owner_id': anytimerrequest.requester_id,
+            'recipient_id': anytimerrequest.recipient_id,
+            'owner_name': anytimerrequest.requester_name,
+            'recipient_name': anytimerrequest.recipient_name,
+            'amount': anytimerrequest.amount,
+            'type': anytimerrequest.type,
+            'description': anytimerrequest.description,
+        }
+        anytimerrequests_data.append(anytimerrequest_data)
+
+    return Response(status=200, data=anytimerrequests_data)
 
 @api_view(['GET'])
-def fetch_anytimers():
+def fetch_anytimers(request, direction):
+    if direction == 'incoming':
+        anytimers = anyTimer.objects.filter(recipient_id=request.thalia_user['pk'])
+    elif direction == 'outgoing':
+        anytimers = anyTimer.objects.filter(owner_id=request.thalia_user['pk'])
+    else:
+        return Response(status=400, data={'message': 'Invalid direction'})
 
-    return Response(200)
+    anytimers_data = []
+    for anytimer in anytimers:
+        anytimer_data = {
+            'id': anytimer.id,
+            'owner_id': anytimer.owner_id,
+            'recipient_id': anytimer.recipient_id,
+            'owner_name': anytimer.owner_name,
+            'recipient_name': anytimer.recipient_name,
+            'amount': anytimer.amount,
+            'type': anytimer.type,
+            'description': anytimer.description,
+        }
+        anytimers_data.append(anytimer_data)
+
+    return Response(status=200, data=anytimers_data)
