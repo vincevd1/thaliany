@@ -5,7 +5,7 @@ import APIService from "../services/api.service"
 import APIBase from "../enums/apibase.enum"
 import AnytimerStatus from "../enums/anytimerstatus.enum"
 import "./anytimerlist.component.css"
-import loadingImg from "../images/loading.png"
+import Loading from "./loading.component"
 
 interface ListProps {
 	list_type: 'confirmed' | 'request'
@@ -48,9 +48,7 @@ export default function AnyTimerList({ list_type, direction }: ListProps) {
 				) 
 				: 
 				(
-					<div className="loading">
-						<img src={loadingImg} alt="loading" className="loading-image"/>
-					</div>
+					<Loading />
 				)
 			}
 		</div>
