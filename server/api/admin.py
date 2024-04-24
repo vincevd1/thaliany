@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import anyTimer, anyTimerRequest
+from .models import anyTimer, anyTimerRequest , AnyTimerProof
 
 # Register your models here.
 class anyTimerAdmin(admin.ModelAdmin):
@@ -20,5 +20,15 @@ class anyTimerRequestAdmin(admin.ModelAdmin):
         else:
             return []
 
+class anyTimerProofAdmin(admin.ModelAdmin):
+    list_display = ['id','anytimer_id', 'description', 'proof_type', 'created_at']
+    search_fields = ("id","anytimer_id")
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # if the object is being edited
+            return ['anytimer_id']
+        else:
+            return []
+
 admin.site.register(anyTimer, anyTimerAdmin)
 admin.site.register(anyTimerRequest, anyTimerRequestAdmin)
+admin.site.register(AnyTimerProof, anyTimerProofAdmin)
