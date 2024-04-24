@@ -7,5 +7,6 @@ export default interface AnyTimer {
     amount: number
     type: string
     description: string
+    status: string
 }
   

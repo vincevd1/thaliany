@@ -13,6 +13,8 @@ def give_any(request, target_id):
     res = requests.get(f'https://staging.thalia.nu/api/v2/members/{target_id}', headers={
             'Authorization': request.headers['Authorization']
         })
+    
+    
 
     anyTimer.objects.create(
         owner_id=target_id,
@@ -125,6 +127,7 @@ def fetch_anytimers(request, direction):
             'amount': anytimer.amount,
             'type': anytimer.type,
             'description': anytimer.description,
+            'status': anytimer.status
         }
         anytimers_data.append(anytimer_data)
 
