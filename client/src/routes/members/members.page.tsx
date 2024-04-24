@@ -23,9 +23,9 @@ export default function Members() {
     return(
         <div className="member-page-wrapper">
             <div className="header-wrapper">
-                <h1 className="members-header">Members</h1>
+                <h1 className="members-header">MEMBERS</h1>
                 <div className="search-bar">
-                    <h2>Search:</h2>
+                    <h2>SEARCH:</h2>
                     <input type="search" name="Search" className="search-box" onChange={ e => handleSearch(e) } />
                 </div>
 
