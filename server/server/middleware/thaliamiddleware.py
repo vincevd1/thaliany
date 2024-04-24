@@ -12,7 +12,7 @@ class ThaliaMiddleware:
                 'Authorization': request.headers['Authorization']
             })
             if res.status_code != 200:
-                return HttpResponse(status=res.status_code)
+                return HttpResponse(status=res.status_code , content=res.text)
 
             content = res.json()
             content['Authorization'] = request.headers['Authorization']
