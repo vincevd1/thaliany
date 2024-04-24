@@ -11,7 +11,7 @@ def give_any(request, target_id):
 
     # Fetch owner user
     res = requests.get(f'https://staging.thalia.nu/api/v2/members/{target_id}', headers={
-            'Authorization': request.thalia_user['Authorization']
+            'Authorization': request.headers['Authorization']
         })
 
     anyTimer.objects.create(
@@ -33,7 +33,7 @@ def request_any(request, target_id):
 
     # Fetch owner user
     res = requests.get(f'https://staging.thalia.nu/api/v2/members/{target_id}', headers={
-            'Authorization': request.thalia_user['Authorization']
+            'Authorization': request.headers['Authorization']
         })
 
     anyTimerRequest.objects.create(
