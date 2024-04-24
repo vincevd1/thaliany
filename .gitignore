@@ -31,3 +31,6 @@ db.sqlite3
 
 #env
 .env
+
+#proofs
+proofs
