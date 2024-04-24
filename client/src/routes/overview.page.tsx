@@ -40,14 +40,14 @@ export default function Overview() {
             <>
                 <div className="welcome-wrapper">
                     <img className="profile-photo" src={avatar} alt="" />
-                    <h1 className="welcome-header">Hello {displayName}</h1>
+                    <h1 className="welcome-header">HELLO {displayName.toUpperCase()}</h1>
                 </div>
 
-                <h2 className="overview-header">Overview</h2>
+                <h2 className="overview-header">OVERVIEW</h2>
 
-                <h2>Your anytimers</h2>
+                <h2>YOUR ANYTIMERS</h2>
                 <AnyTimerList list_type='confirmed' direction='outgoing' />
-                <h2>Incoming anytimers</h2>
+                <h2>INCOMING ANYTIMERS</h2>
                 <AnyTimerList list_type='confirmed' direction='incoming' />
             </>
         )

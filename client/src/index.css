@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Oswald:wght@200..700&display=swap');
 
 :root {
-    --font: 'Rubik', sans-serif;
+    --font: 'Open Sans';
 
     --thalia-pink: #e62272;
     --pink-highlight: #eb4e8e;
@@ -29,6 +29,14 @@
 body {
     background-color: var(--thalia-black);
     color: var(--white);
+
+    h2 {
+        font-family: 'Oswald', sans-serif;
+    }
+
+    h1 {
+        font-family: 'Oswald', sans-serif;
+    }
 
     font-family: var(--font);
 }
@@ -65,7 +73,9 @@ button:hover {
     cursor: pointer;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
     all: unset;
 
     height: 2em;

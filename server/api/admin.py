@@ -3,7 +3,7 @@ from .models import anyTimer, anyTimerRequest , AnyTimerProof
 
 # Register your models here.
 class anyTimerAdmin(admin.ModelAdmin):
-    list_display = ['id','owner_name', 'recipient_name', 'amount', 'type', 'description']
+    list_display = ['id','owner_name', 'recipient_name', 'amount', 'type', 'description', 'status']
     search_fields = ("id","owner_name", "recipient_name")
     def get_readonly_fields(self, request, obj=None):
         if obj:  # if the object is being edited
