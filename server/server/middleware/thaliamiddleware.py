@@ -11,6 +11,7 @@ class ThaliaMiddleware:
             res = requests.get('https://staging.thalia.nu/api/v2/members/me', headers={
                 'Authorization': request.headers['Authorization']
             })
+            
             if res.status_code != 200:
                 return HttpResponse(status=res.status_code , content=res.text)
 

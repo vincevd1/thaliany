@@ -54,9 +54,13 @@ export default function Member(thalia_user: ThaliaUser) {
             'amount': formData.get('amount'),
         }
 
-        APIService.post(APIBase.BACKEND, `/api/users/${thalia_user.pk}/give/`, data);
-
-        navigate('/');
+        APIService.post(
+            APIBase.BACKEND, 
+            `/api/users/${thalia_user.pk}/give/`, 
+            data
+        ).then(() => {
+            navigate('/');
+        });
     }
 
     function postRequestAny(event: FormEvent<HTMLFormElement>) {
@@ -70,9 +74,13 @@ export default function Member(thalia_user: ThaliaUser) {
             'amount': formData.get('amount'),
         }
 
-        APIService.post(APIBase.BACKEND, `/api/users/${thalia_user.pk}/request/`, data)
-
-        navigate('/requests');
+        APIService.post(
+            APIBase.BACKEND, 
+            `/api/users/${thalia_user.pk}/request/`, 
+            data
+        ).then(() => {
+            navigate('/requests');
+        });
     }
 
     return (

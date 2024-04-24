@@ -106,11 +106,10 @@ class _APIService {
                     'Authorization': `Bearer ${User.getAccessToken}`
                 }
             })
-    
+
             return req.data
         } catch(error: any) {
-            // window.location.href = '/api/error';
-            // window.location.reload();
+            console.log("Something went wrong")
             throw new Error(error)
         }
     }
