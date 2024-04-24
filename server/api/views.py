@@ -2,7 +2,7 @@ import json
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import anyTimer, anyTimerRequest
+from .models import anyTimer, anyTimerRequest, AnytimerStatus
 
 @api_view(['POST'])
 def give_any(request, target_id):
@@ -24,7 +24,7 @@ def give_any(request, target_id):
         description=body['description'],
     )
 
-    return Response(200)
+    return Response(status=200)
 
 @api_view(['POST'])
 def request_any(request, target_id):
@@ -45,13 +45,13 @@ def request_any(request, target_id):
         type=body['type'],
         description=body['description'],
     )
-    return Response(200)
+    return Response(status=200)
 
 @api_view(['POST'])
 def complete_anytimer(request, anytimer_id):
     anytimer = anyTimer.objects.get(owner_id=request.thalia_user['pk'], id=anytimer_id)
     anytimer.delete()
-    return Response(200)
+    return Response(status=200)
 
 @api_view(['POST'])
 def accept_anytimer(request ,request_id):
@@ -66,19 +66,19 @@ def accept_anytimer(request ,request_id):
         description=anytimerrequest.description,
     )
     anytimerrequest.delete()
-    return Response(200)
+    return Response(status=200)
 
 @api_view(['POST'])
 def deny_anytimer(request,request_id):
     anytimerrequest = anyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
     anytimerrequest.delete()
-    return Response(200)
+    return Response(status=200)
 
 @api_view(['POST'])
 def revoke_request(request, request_id):
     anytimerrequest = anyTimerRequest.objects.get(requester_id=request.thalia_user['pk'], id=request_id)
     anytimerrequest.delete()
-    return Response(200)
+    return Response(status=200)
 
 @api_view(['GET'])
 def fetch_requests(request, direction):
@@ -129,3 +129,32 @@ def fetch_anytimers(request, direction):
         anytimers_data.append(anytimer_data)
 
     return Response(status=200, data=anytimers_data)
+
+@api_view(['POST'])
+def use_anytimer(request, anytimer_id):
+    thalia_user = request.thalia_user
+    anytimer = anyTimer.objects.get(owner_id=thalia_user["pk"], id=anytimer_id)
+    
+    if(anytimer.status == AnytimerStatus.UNUSED):
+        if(anytimer.amount > 1):
+            # This requires some clarification
+            # We first subtract 1 from anytimer and save it
+            anytimer.amount -= 1
+            anytimer.save()
+
+            #Now we change the amount to one and change the status
+            anytimer.amount = 1
+            anytimer.status = AnytimerStatus.USED
+
+            #And we set the id to None as to not overwrite our original anytimer with a bigger amount and thus 'duplicate' it
+            anytimer.id = None
+
+            #Then we save it again as a new object
+            anytimer.save()
+        else:
+            anytimer.status = AnytimerStatus.USED
+            anytimer.save()
+    else:
+        return Response(status=403)
+    
+    return Response(status=200)

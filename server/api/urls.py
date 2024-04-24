@@ -10,4 +10,5 @@ urlpatterns = [
     path('anytimers/requests/<request_id>/accept/', views.accept_anytimer, name="accept_anytimer"),
     path('anytimers/requests/<anytimer_id>/complete/', views.complete_anytimer, name="complete_anytimer"),
     path('anytimers/requests/<request_id>/revoke/', views.revoke_request, name="revoke_request"),
+    path('anytimers/confirmed/<anytimer_id>/use/', views.use_anytimer, name="use_anytimer")
 ]
