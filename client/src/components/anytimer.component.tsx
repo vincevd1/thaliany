@@ -19,6 +19,16 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
     // State of the anytimer, when the user clicks a button the anytimer should disappear
     const [showAnytimer, setShowAnytimer] = useState(true);
     const [, setAmount] = useState({ AnyTimer });
+    const [file, setFile] = useState<string | undefined>();
+    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        if (!event.target.files) {
+            return;
+        }
+        const selectedFile = event.target.files[0];
+
+        setFile(URL.createObjectURL(selectedFile));
+
+    }
 
     function postAcceptAny() {
         APIService.post(
@@ -66,8 +76,8 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             <>
                 <div className="form-content">
                     <span>Upload photo</span>
-                    {/* todo add photo upload */}
-
+                    <input type="file" name="photo" id="photo" onChange={handleChange} />
+                    <img src={file} className="picture" />
                 </div>
                 <div className="button-wrapper">
                     <button className="confirm-button confirmation-button" type='submit' >
@@ -78,22 +88,27 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         )
     }
 
-    function postGiveAny(event: FormEvent<HTMLFormElement>) {
+    function postCompleteAny(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        
-        const formData = new FormData(event.currentTarget);
-        
-        const data = {
-            // get photo
+        // THIS TOOK ME 3 HOURS TO FIGURE OUT AND IT DOES NOT EVEN LOOK THAT COMPLICATED
+        // BUT ALSO THE DJANGO API ENDPOINT IS WORKING NOW BUT I DONT KNOW HOW
+        // FOR CONTEXT IM ACTUALLY DRUNK RIGHT NOW THIS IS RIGHT AFTER THE KINGSDAY BORREL
+        const formData = new FormData();
+        if (file) {
+            fetch(file)
+            .then(response => response.blob())
+            .then(blob => {
+                formData.append('proof_type', "photo") //default for now
+                formData.append('photo',blob, AnyTimer.id+'.jpg');
+                APIService.post(
+                    APIBase.BACKEND, 
+                    `/api/anytimers/confirmed/${AnyTimer.id}/complete/`, 
+                    formData
+                ).then(() => {
+                    setShowAnytimer(false)
+                });
+            });
         }
-
-        APIService.post(
-            APIBase.BACKEND, 
-            `/api/anytimers/confirmed/${AnyTimer.id}/complete/`, 
-            data
-        ).then(() => {
-            //close popup
-        });
     }
 
 
@@ -122,7 +137,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                     COMPLETE
                                 </button>
                             }>
-                                <form onSubmit={postGiveAny}>
+                                <form onSubmit={postCompleteAny}>
                                     {giveOrRequestAnyForm()}
                                 </form>
                             </Popup>

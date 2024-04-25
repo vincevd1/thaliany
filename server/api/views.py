@@ -2,7 +2,8 @@ import json
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import anyTimer, anyTimerRequest, AnytimerStatus
+from .models import anyTimer, anyTimerRequest, AnytimerStatus , AnyTimerProof
+import os
 
 @api_view(['POST'])
 def give_any(request, target_id):
@@ -80,10 +81,27 @@ def use_anytimer(request, anytimer_id):
 
 @api_view(['POST'])
 def complete_anytimer(request, anytimer_id):
+    anytimer = anyTimer.objects.get(recipient_id=request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
+    if (not anytimer): #Check if there is actually a anytimer and not just a random picture uploaded
+        return Response(status=403)
+    anyTimerProof = AnyTimerProof.objects.get(anytimer_id = anytimer_id)
+    if(anyTimerProof):
+        return Response(status=403)
+    photo = request.FILES["photo"]
+    
+    # Save the photo to proofs/
+    file_path = os.path.join('proofs', anytimer_id + '.jpg') #renaming again to anytimer_id to avoid misuse
+    with open(file_path, 'wb') as file:
+        for chunk in photo.chunks():
+            file.write(chunk)
 
-    # todo add photo upload system here
-    anytimer = anyTimer.objects.get(recipient_id =request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
-    anytimer.delete()
+    AnyTimerProof.objects.create(
+        anytimer_id=anytimer_id,
+        image=file_path,
+        proof_type = request.POST.get("proof_type")
+    )
+
+    # anytimer.delete()
     return Response(status=200)
 
 @api_view(['POST'])
