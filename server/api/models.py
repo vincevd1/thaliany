@@ -4,7 +4,6 @@ class AnytimerStatus(models.TextChoices):
     UNUSED = "unused"
     USED = "used"
     COMPLETED = "completed"
-    ACCEPTED = "accepted"
 
 class anyTimer(models.Model):
     owner_id = models.IntegerField()

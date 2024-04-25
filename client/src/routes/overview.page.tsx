@@ -43,11 +43,12 @@ export default function Overview() {
                 </div>
 
                 <h2 className="overview-header">OVERVIEW</h2>
-
-                <h2>YOUR ANYTIMERS</h2>
-                <AnyTimerList list_type='confirmed' direction='outgoing' />
                 <h2>INCOMING ANYTIMERS</h2>
-                <AnyTimerList list_type='confirmed' direction='incoming' />
+                <AnyTimerList list_type='confirmed' direction='incoming' state="used"/>
+                <h2>YOUR ANYTIMERS</h2>
+                <AnyTimerList list_type='confirmed' direction='outgoing' state="unused"/>
+                <h2>ANYTIMERS ON YOU</h2>
+                <AnyTimerList list_type='confirmed' direction='incoming' state="unused"/>
             </>
         )
     } else {

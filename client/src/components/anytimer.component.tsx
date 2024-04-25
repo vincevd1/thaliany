@@ -8,10 +8,11 @@ interface Props {
     AnyTimer: AnyTimer,
     direction: 'outgoing' | 'incoming'
     type: 'confirmed' | 'request'
+    state: string
 }
 
 //todo change type to anytimer model
-export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) {
+export default function AnyTimerComponent({ AnyTimer, direction, type , state }: Props) {
     const displayName = (direction == 'outgoing') ? AnyTimer.recipient_name : AnyTimer.owner_name;
 
     // State of the anytimer, when the user clicks a button the anytimer should disappear
@@ -73,6 +74,13 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
                         type == 'confirmed' && direction == 'outgoing' ? (
                             <button className="anytimer-button" onClick={postUseAny}>
                                 USE
+                            </button>
+                        ) : null
+                    }
+                    {
+                        type == 'confirmed' && direction == 'incoming' && state == "used"? (
+                            <button className="anytimer-button">
+                                COMPLETE
                             </button>
                         ) : null
                     }

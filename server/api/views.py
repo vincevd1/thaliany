@@ -50,6 +50,35 @@ def request_any(request, target_id):
     return Response(status=200)
 
 @api_view(['POST'])
+def use_anytimer(request, anytimer_id):
+    thalia_user = request.thalia_user
+    anytimer = anyTimer.objects.get(owner_id=thalia_user["pk"], id=anytimer_id)
+    
+    if(anytimer.status == AnytimerStatus.UNUSED):
+        if(anytimer.amount > 1):
+            # This requires some clarification
+            # We first subtract 1 from anytimer and save it
+            anytimer.amount -= 1
+            anytimer.save()
+
+            #Now we change the amount to one and change the status
+            anytimer.amount = 1
+            anytimer.status = AnytimerStatus.USED
+
+            #And we set the id to None as to not overwrite our original anytimer with a bigger amount and thus 'duplicate' it
+            anytimer.id = None
+
+            #Then we save it again as a new object
+            anytimer.save()
+        else:
+            anytimer.status = AnytimerStatus.USED
+            anytimer.save()
+    else:
+        return Response(status=403)
+    
+    return Response(status=200)
+
+@api_view(['POST'])
 def complete_anytimer(request, anytimer_id):
     anytimer = anyTimer.objects.get(owner_id=request.thalia_user['pk'], id=anytimer_id)
     anytimer.delete()
@@ -133,31 +162,3 @@ def fetch_anytimers(request, direction):
 
     return Response(status=200, data=anytimers_data)
 
-@api_view(['POST'])
-def use_anytimer(request, anytimer_id):
-    thalia_user = request.thalia_user
-    anytimer = anyTimer.objects.get(owner_id=thalia_user["pk"], id=anytimer_id)
-    
-    if(anytimer.status == AnytimerStatus.UNUSED):
-        if(anytimer.amount > 1):
-            # This requires some clarification
-            # We first subtract 1 from anytimer and save it
-            anytimer.amount -= 1
-            anytimer.save()
-
-            #Now we change the amount to one and change the status
-            anytimer.amount = 1
-            anytimer.status = AnytimerStatus.USED
-
-            #And we set the id to None as to not overwrite our original anytimer with a bigger amount and thus 'duplicate' it
-            anytimer.id = None
-
-            #Then we save it again as a new object
-            anytimer.save()
-        else:
-            anytimer.status = AnytimerStatus.USED
-            anytimer.save()
-    else:
-        return Response(status=403)
-    
-    return Response(status=200)

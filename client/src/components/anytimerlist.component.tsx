@@ -10,9 +10,10 @@ import loadingImg from "../images/loading.png"
 interface ListProps {
 	list_type: 'confirmed' | 'request'
 	direction: 'incoming' | 'outgoing'
+	state: string
 }
 
-export default function AnyTimerList({ list_type, direction }: ListProps) {
+export default function AnyTimerList({ list_type, direction, state}: ListProps) {
 	const [anytimerList, setAnytimerList] = useState<AnyTimer[]>()
 
 	useEffect(() => {
@@ -24,7 +25,7 @@ export default function AnyTimerList({ list_type, direction }: ListProps) {
 			} else if (list_type == 'confirmed') {
 				const list: AnyTimer[] = await APIService.get(APIBase.BACKEND, `/api/anytimers/confirmed/${direction}`)
 				const unusedList = list.filter((anytimer) => {
-					return anytimer.status == AnytimerStatus.UNUSED
+					return anytimer.status == state
 				})
 
 				setAnytimerList(unusedList.reverse());
@@ -40,7 +41,7 @@ export default function AnyTimerList({ list_type, direction }: ListProps) {
 				anytimerList ? 
 				(
 					anytimerList.length > 0 ?
-						anytimerList.map(anytimer => <AnyTimerComponent AnyTimer={anytimer} direction={direction} type={list_type} key={anytimer.id} />)
+						anytimerList.map(anytimer => <AnyTimerComponent AnyTimer={anytimer} direction={direction} type={list_type} state ={state} key={anytimer.id} />)
 					: 
 						<div className="no-anys-found">
 							No anytimers found!
