@@ -3,8 +3,9 @@ import { ThaliaUser } from "../models/thalia.user.model";
 import User from "../modules/user.module";
 import APIService from "../services/api.service";
 import APIBase from "../enums/apibase.enum";
-import './overview.css'
+import './overview.page.css'
 import AnyTimerList from "../components/anytimerlist.component";
+import Loading from "../components/loading.component";
 
 export default function Overview() {
     const [avatar, setAvatar] = useState('');
@@ -30,7 +31,7 @@ export default function Overview() {
 
     if(isLoading) {
         return(
-            <div>Loading.. please wait</div>
+            <Loading />
         )
     }
 
