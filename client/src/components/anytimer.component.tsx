@@ -71,7 +71,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         });
     }
 
-    function giveOrRequestAnyForm() {
+    function uploadProofForm() {
         return(
             <>
                 <div className="form-content">
@@ -92,7 +92,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         event.preventDefault();
         // THIS TOOK ME 3 HOURS TO FIGURE OUT AND IT DOES NOT EVEN LOOK THAT COMPLICATED
         // BUT ALSO THE DJANGO API ENDPOINT IS WORKING NOW BUT I DONT KNOW HOW
-        // FOR CONTEXT IM ACTUALLY DRUNK RIGHT NOW THIS IS RIGHT AFTER THE KINGSDAY BORREL
+        // FOR CONTEXT THIS IS RIGHT AFTER THE KINGSDAY BORREL
         const formData = new FormData();
         if (file) {
             fetch(file)
@@ -138,7 +138,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                 </button>
                             }>
                                 <form onSubmit={postCompleteAny}>
-                                    {giveOrRequestAnyForm()}
+                                    {uploadProofForm()}
                                 </form>
                             </Popup>
                         ) : null
