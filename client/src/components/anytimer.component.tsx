@@ -16,6 +16,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
 
     // State of the anytimer, when the user clicks a button the anytimer should disappear
     const [showAnytimer, setShowAnytimer] = useState(true);
+    const [, setAmount] = useState({ AnyTimer });
 
     function postAcceptAny() {
         APIService.post(
@@ -49,7 +50,12 @@ export default function AnyTimerComponent({ AnyTimer, direction, type }: Props) 
             APIBase.BACKEND,
             `/api/anytimers/confirmed/${AnyTimer.id}/use/`
         ).then(() => {
-            setShowAnytimer(false)
+            if (AnyTimer.amount == 1) {
+                setShowAnytimer(false)
+            } else {
+                AnyTimer.amount -= 1;
+                setAmount({ AnyTimer });
+            }
         });
     }
 

@@ -1,22 +1,27 @@
 .anytimer {
     display: flex;
-
+    flex: 1;
+    flex-wrap: wrap;
     min-height: 4em;
     margin: 1em 0;
     padding: 1em 1.5em;
     border-radius: 0.5em;
+    align-items: center;
 
     background-color: var(--light-black);
 }
 
 .anytimer-info {
+    flex: 1;
+    flex-wrap: wrap;
     display: flex;
     align-items: center;
 }
 
-.anytimer-info > span {
-    width: 9em;
-    margin-right: 5em;
+.anytimer-info>span {
+    flex: 1;
+    margin: 1em;
+    width: max-content;
 }
 
 .anytimer-buttons {
