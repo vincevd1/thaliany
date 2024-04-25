@@ -80,7 +80,9 @@ def use_anytimer(request, anytimer_id):
 
 @api_view(['POST'])
 def complete_anytimer(request, anytimer_id):
-    anytimer = anyTimer.objects.get(owner_id=request.thalia_user['pk'], id=anytimer_id)
+
+    # todo add photo upload system here
+    anytimer = anyTimer.objects.get(recipient_id =request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
     anytimer.delete()
     return Response(status=200)
 

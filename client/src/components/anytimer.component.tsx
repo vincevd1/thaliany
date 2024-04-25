@@ -1,8 +1,9 @@
 import APIService from "../services/api.service";
+import Popup from './popup.component'
 import APIBase from "../enums/apibase.enum";
 import './anytimer.component.css'
 import AnyTimer from "../models/anytimer.model";
-import { useState } from "react";
+import {FormEvent, useState } from 'react';
 
 interface Props {
     AnyTimer: AnyTimer,
@@ -60,6 +61,43 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         });
     }
 
+    function giveOrRequestAnyForm() {
+        return(
+            <>
+                <div className="form-content">
+                    <span>Upload photo</span>
+                    {/* todo add photo upload */}
+
+                </div>
+                <div className="button-wrapper">
+                    <button className="confirm-button confirmation-button" type='submit' >
+                        Confirm
+                    </button>
+                </div>
+            </>
+        )
+    }
+
+    function postGiveAny(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.currentTarget);
+        
+        const data = {
+            // get photo
+        }
+
+        APIService.post(
+            APIBase.BACKEND, 
+            `/api/anytimers/confirmed/${AnyTimer.id}/complete/`, 
+            data
+        ).then(() => {
+            //close popup
+        });
+    }
+
+
+
     if(showAnytimer) {
         return (
             <div className="anytimer">
@@ -79,9 +117,15 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                     }
                     {
                         type == 'confirmed' && direction == 'incoming' && state == "used"? (
-                            <button className="anytimer-button">
-                                COMPLETE
-                            </button>
+                            <Popup title={"Complete anytimer from " + AnyTimer.owner_name} button={
+                                <button className="complete-button">
+                                    COMPLETE
+                                </button>
+                            }>
+                                <form onSubmit={postGiveAny}>
+                                    {giveOrRequestAnyForm()}
+                                </form>
+                            </Popup>
                         ) : null
                     }
                     {
