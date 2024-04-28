@@ -57,7 +57,7 @@ export default function MemberList({ search }: { search: string }) {
                     <div className="membersList">
                         {membersLists.map((members, index) => (
                             <div key={index}>
-                                {(members && members.results) ? members.results.map(member => <Member {...member} key={member.pk} />) : <></>}
+                                {(members && members.results) ? members.results.map(member => <Member {...member} key={member.pk} />) : null}
                             </div>
                         ))}
                     </div>

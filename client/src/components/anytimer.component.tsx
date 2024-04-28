@@ -18,8 +18,9 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
 
     // State of the anytimer, when the user clicks a button the anytimer should disappear
     const [showAnytimer, setShowAnytimer] = useState(true);
-    const [, setAmount] = useState({ AnyTimer });
+    const [amount, setAmount] = useState(AnyTimer.amount);
     const [file, setFile] = useState<string | undefined>();
+    
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         if (!event.target.files) {
             return;
@@ -27,7 +28,6 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         const selectedFile = event.target.files[0];
 
         setFile(URL.createObjectURL(selectedFile));
-
     }
 
     function postAcceptAny() {
@@ -62,11 +62,10 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             APIBase.BACKEND,
             `/api/anytimers/confirmed/${AnyTimer.id}/use/`
         ).then(() => {
-            if (AnyTimer.amount == 1) {
+            if (amount == 1) {
                 setShowAnytimer(false)
             } else {
-                AnyTimer.amount -= 1;
-                setAmount({ AnyTimer });
+                setAmount(amount - 1);
             }
         });
     }
@@ -76,7 +75,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             <>
                 <div className="form-content">
                     <span>Upload photo</span>
-                    <input type="file" name="photo" id="photo" onChange={handleChange} />
+                    <input type="file" accept=".png,.jpg,.jpeg,.gif" name="photo" id="photo" onChange={handleChange} />
                     <img src={file} className="picture" />
                 </div>
                 <div className="button-wrapper">
@@ -111,14 +110,12 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         }
     }
 
-
-
     if(showAnytimer) {
         return (
             <div className="anytimer">
                 <div className="anytimer-info">
                     <span>{displayName}</span>
-                    <span>Amount: {AnyTimer.amount}</span>
+                    <span>Amount: {amount}</span>
                     <span>Type: {AnyTimer.type}</span>
                     {/* <span>Description: {AnyTimer.description}</span> */}
                 </div>

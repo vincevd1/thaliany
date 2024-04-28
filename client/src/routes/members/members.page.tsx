@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MemberList from "../../components/members/memberlist.component";
 import './members.page.css'
+import Loading from "../../components/loading.component";
 
 export default function Members() {
     const [search, setSearch] = useState<string>('')
@@ -33,7 +34,7 @@ export default function Members() {
 
             {
                 searching ? (
-                    <div>Loading, please wait</div>
+                    <Loading />
                 ):(
                     <MemberList search={search}/>
                 )

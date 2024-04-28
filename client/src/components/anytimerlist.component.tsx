@@ -3,7 +3,6 @@ import AnyTimerComponent from "./anytimer.component"
 import AnyTimer from '../models/anytimer.model'
 import APIService from "../services/api.service"
 import APIBase from "../enums/apibase.enum"
-import AnytimerStatus from "../enums/anytimerstatus.enum"
 import "./anytimerlist.component.css"
 import Loading from "./loading.component"
 

@@ -82,15 +82,27 @@ def use_anytimer(request, anytimer_id):
 @api_view(['POST'])
 def complete_anytimer(request, anytimer_id):
     anytimer = anyTimer.objects.get(recipient_id=request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
+
     if (not anytimer): #Check if there is actually a anytimer and not just a random picture uploaded
         return Response(status=403)
-    anyTimerProof = AnyTimerProof.objects.get(anytimer_id = anytimer_id)
-    if(anyTimerProof):
-        return Response(status=403)
-    photo = request.FILES["photo"]
     
-    # Save the photo to proofs/
-    file_path = os.path.join('proofs', anytimer_id + '.jpg') #renaming again to anytimer_id to avoid misuse
+    anyTimerProofExists = AnyTimerProof.objects.filter(anytimer_id = anytimer_id).exists()
+    if(anyTimerProofExists):
+        return Response(status=403)
+    
+    photo = request.FILES["photo"]
+
+    # Get dirname of /proofs
+    DIRNAME = os.path.dirname(__file__).replace("/api", "/proofs/")
+
+    # Make dir if not exists
+    if not os.path.exists(DIRNAME):
+        os.makedirs(DIRNAME)
+
+    # Get corresponding file path
+    file_path = os.path.join(DIRNAME, anytimer_id + '.jpg') #renaming again to anytimer_id to avoid misuse
+
+    # Save photo
     with open(file_path, 'wb') as file:
         for chunk in photo.chunks():
             file.write(chunk)
