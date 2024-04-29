@@ -9,7 +9,7 @@ import Loading from "./loading.component"
 interface ListProps {
 	list_type: 'confirmed' | 'request'
 	direction: 'incoming' | 'outgoing'
-	state: string
+	state: 'used' | 'unused' | 'completed'
 }
 
 export default function AnyTimerList({ list_type, direction, state}: ListProps) {
@@ -40,16 +40,13 @@ export default function AnyTimerList({ list_type, direction, state}: ListProps) 
 				anytimerList ? 
 				(
 					anytimerList.length > 0 ?
-						anytimerList.map(anytimer => <AnyTimerComponent AnyTimer={anytimer} direction={direction} type={list_type} state ={state} key={anytimer.id} />)
+						anytimerList.map(anytimer => <AnyTimerComponent AnyTimer={anytimer} direction={direction} type={list_type} state={state} key={anytimer.id} />)
 					: 
 						<div className="no-anys-found">
 							No anytimers found!
 						</div>
 				) 
-				: 
-				(
-					<Loading />
-				)
+				: <Loading />
 			}
 		</div>
 	)

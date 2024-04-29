@@ -8,7 +8,7 @@ interface PopupProps {
 }
 
 export default function Popup({ title, children, button }: PopupProps) {
-    const [visible, setVisible] = useState<boolean>(false);
+    const [open, setIsOpen] = useState<boolean>(false);
 
     return (
         <>
@@ -19,23 +19,25 @@ export default function Popup({ title, children, button }: PopupProps) {
                             button.props.onClick();
                         }
                         
-                        setVisible(true);
+                        setIsOpen(true);
                     }
                 })
             }
 
             {
-                visible ? (
+                open && (
                     <div className="popup">
                         <div className="popup-header">
                             <h2 className="popup-title">{ title }</h2>
-                            <span className="close-popup" onClick={() => setVisible(false)}>&#x2715;</span>
+                            <span className="close-popup" onClick={() => setIsOpen(false)}>&#x2715;</span>
                         </div>
                         <div className="popup-content">
-                            { children }
+                        {
+                            children
+                        }
                         </div>
                     </div>
-                ) : null
+                )
             }
         </>
     )

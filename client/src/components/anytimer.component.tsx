@@ -9,7 +9,7 @@ interface Props {
     AnyTimer: AnyTimer,
     direction: 'outgoing' | 'incoming'
     type: 'confirmed' | 'request'
-    state: string
+    state: 'used' | 'unused' | 'completed'
 }
 
 //todo change type to anytimer model
@@ -117,9 +117,23 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                     <span>{displayName}</span>
                     <span>Amount: {amount}</span>
                     <span>Type: {AnyTimer.type}</span>
-                    {/* <span>Description: {AnyTimer.description}</span> */}
                 </div>
                 <div className="anytimer-buttons">
+                    <Popup title={ (direction == 'outgoing') ? `Anytimer on ${AnyTimer.recipient_name}` : `Anytimer from ${AnyTimer.owner_name}` } button={
+                        <button className="anytimer-button">
+                            VIEW
+                        </button>
+                    }>
+                        <>
+                            <span>Anytimer Nr: {AnyTimer.id} </span>
+                            <span>Owner: {AnyTimer.owner_name}</span>
+                            <span>Recipient: {AnyTimer.recipient_name}</span>
+                            <span>Amount: {amount}</span>
+                            <span>Type: {AnyTimer.type}</span>
+                            { AnyTimer.description != '' && <span>Description: {AnyTimer.description}</span> }
+                        </>
+                    </Popup>
+
                     {
                         type == 'confirmed' && direction == 'outgoing' ? (
                             <button className="anytimer-button" onClick={postUseAny}>

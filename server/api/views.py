@@ -113,7 +113,10 @@ def complete_anytimer(request, anytimer_id):
         proof_type = request.POST.get("proof_type")
     )
 
-    # anytimer.delete()
+    # Set state to completed
+    anytimer.status = AnytimerStatus.COMPLETED
+    anytimer.save()
+
     return Response(status=200)
 
 @api_view(['POST'])

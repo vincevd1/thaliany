@@ -25,6 +25,9 @@
 
 .anytimer-buttons {
     margin-left: auto;
+
+    display: flex;
+    gap: 1em;
 }
 
 .anytimer-button#accept {

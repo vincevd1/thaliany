@@ -10,7 +10,7 @@ export default function Members() {
     function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
         const val = e.target.value;
         
-        //check if the value is still the same after waiting for two seconds, that means the user
+        //check if the value is still the same after waiting for a second, that means the user
         //stopped typing and we can do a get request to the server.
         setSearching(true)
         setTimeout(() => {
