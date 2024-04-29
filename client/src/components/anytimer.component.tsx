@@ -3,7 +3,8 @@ import Popup from './popup.component'
 import APIBase from "../enums/apibase.enum";
 import './anytimer.component.css'
 import AnyTimer from "../models/anytimer.model";
-import {FormEvent, useState } from 'react';
+import {FormEvent, useEffect, useState } from 'react';
+import AnyTimerProof from "../models/anytimerproof.model";
 
 interface Props {
     AnyTimer: AnyTimer,
@@ -12,14 +13,24 @@ interface Props {
     state: 'used' | 'unused' | 'completed'
 }
 
-//todo change type to anytimer model
 export default function AnyTimerComponent({ AnyTimer, direction, type , state }: Props) {
     const displayName = (direction == 'outgoing') ? AnyTimer.recipient_name : AnyTimer.owner_name;
 
     // State of the anytimer, when the user clicks a button the anytimer should disappear
     const [showAnytimer, setShowAnytimer] = useState(true);
     const [amount, setAmount] = useState(AnyTimer.amount);
-    const [file, setFile] = useState<string | undefined>();
+    const [file, setFile] = useState<string>();
+    const [proof, setProof] = useState<AnyTimerProof>();
+
+    useEffect(() => {
+        if(state == "completed") {
+            APIService.get<AnyTimerProof>(APIBase.BACKEND, `/api/proofs/${AnyTimer.id}`)
+            .then(res => {
+                console.log(res)
+                setProof(res);
+            })
+        }
+    },[])
     
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         if (!event.target.files) {
@@ -75,7 +86,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             <>
                 <div className="form-content">
                     <span>Upload photo</span>
-                    <input type="file" accept=".png,.jpg,.jpeg,.gif" name="photo" id="photo" onChange={handleChange} />
+                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi" name="photo" id="photo" onChange={handleChange} />
                     <img src={file} className="picture" />
                 </div>
                 <div className="button-wrapper">
@@ -119,18 +130,29 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                     <span>Type: {AnyTimer.type}</span>
                 </div>
                 <div className="anytimer-buttons">
-                    <Popup title={ (direction == 'outgoing') ? `Anytimer on ${AnyTimer.recipient_name}` : `Anytimer from ${AnyTimer.owner_name}` } button={
+                    <Popup title={ (direction == 'outgoing') ? `ANYTIMER ON ${ AnyTimer.recipient_name.toUpperCase() }` : `ANYTIMER FROM ${ AnyTimer.owner_name.toUpperCase() }` } button={
                         <button className="anytimer-button">
                             VIEW
                         </button>
                     }>
                         <>
-                            <span>Anytimer Nr: {AnyTimer.id} </span>
-                            <span>Owner: {AnyTimer.owner_name}</span>
-                            <span>Recipient: {AnyTimer.recipient_name}</span>
-                            <span>Amount: {amount}</span>
-                            <span>Type: {AnyTimer.type}</span>
-                            { AnyTimer.description != '' && <span>Description: {AnyTimer.description}</span> }
+                            <div className="detailed-anytimer-info">
+                                <span>Anytimer Nr: {AnyTimer.id} </span>
+                                <span>Owner: {AnyTimer.owner_name}</span>
+                                <span>Recipient: {AnyTimer.recipient_name}</span>
+                                <span>Amount: {amount}</span>
+                                <span>Type: {AnyTimer.type}</span>
+                                { AnyTimer.description != '' && <span>Description: {AnyTimer.description}</span> }
+                            </div>
+
+                            {
+                                state == "completed" && proof && (
+                                    <>
+                                        <h2>ANYTIMER PROOF</h2>
+                                        <span>Completed at {proof.anytimer_id}</span>
+                                    </>
+                                )
+                            }
                         </>
                     </Popup>
 

@@ -19,15 +19,15 @@ export default function AnyTimerList({ list_type, direction, state}: ListProps) 
 		async function fetchAnytimers() {
 			if (list_type == 'request') {
 				const list: AnyTimer[] = await APIService.get(APIBase.BACKEND, `/api/anytimers/requests/${direction}`)
-
+				
 				setAnytimerList(list.reverse());
 			} else if (list_type == 'confirmed') {
 				const list: AnyTimer[] = await APIService.get(APIBase.BACKEND, `/api/anytimers/confirmed/${direction}`)
-				const unusedList = list.filter((anytimer) => {
+				const filteredList = list.filter((anytimer) => {
 					return anytimer.status == state
 				})
 
-				setAnytimerList(unusedList.reverse());
+				setAnytimerList(filteredList.reverse());
 			}
 		}
 

@@ -7,6 +7,7 @@ import Overview from './routes/overview.page.tsx'
 import APIError from './routes/api/error.page.tsx'
 import Members from './routes/members/members.page.tsx'
 import Requests from './routes/requests/requests.page.tsx'
+import Proofs from './routes/proofs/proofs.page.tsx'
 
 const router = createBrowserRouter([
 	{
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
 			{
 				path: '/requests',
 				element: <Requests />
+			},
+			{
+				path: '/proofs',
+				element: <Proofs />
 			},
 			{
 				path: '/api/error',

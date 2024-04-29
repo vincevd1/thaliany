@@ -197,3 +197,17 @@ def fetch_anytimers(request, direction):
 
     return Response(status=200, data=anytimers_data)
 
+@api_view(['GET'])
+def fetch_proof(request, anytimer_id):
+    proof = AnyTimerProof.objects.get(anytimer_id=anytimer_id)
+    
+    data = {
+        'anytimer_id': proof.anytimer_id,
+        'image': proof.image.url,
+        'description': proof.description,
+        'proof_type': proof.proof_type,
+        'created_at': proof.created_at
+    }
+
+    return Response(status=200, data=data)
+

@@ -54,64 +54,75 @@ class _APIService {
         return authLink.toString();
     }
 
-    async getCredentialsFromCode(code: string): Promise<Credentials> {
-        const form: FormData = new FormData();
-        form.append('grant_type', 'authorization_code')
-        form.append('client_id', this.client_id)
-        form.append('code', code)
-        form.append('code_verifier', this.code_challenge)
-        form.append('redirect_uri', this.redirect_uri)
-
-        const req = await axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
-
-        return req.data
+    getCredentialsFromCode(code: string): Promise<Credentials> {
+        return new Promise((resolve, reject) => {
+            const form: FormData = new FormData();
+            form.append('grant_type', 'authorization_code')
+            form.append('client_id', this.client_id)
+            form.append('code', code)
+            form.append('code_verifier', this.code_challenge)
+            form.append('redirect_uri', this.redirect_uri)
+    
+            axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
+                .then(res => {
+                    resolve(res.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
     }
 
-    async getAccessTokenFromRefreshToken(refresh_token: string): Promise<Credentials> {
-        const form: FormData = new FormData();
-        form.append('grant_type', 'refresh_token')
-        form.append('client_id', this.client_id)
-        form.append('refresh_token', refresh_token)
-
-        const req = await axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
-        return req.data;
+    getAccessTokenFromRefreshToken(refresh_token: string): Promise<Credentials> {
+        return new Promise((resolve, reject) => {
+            const form: FormData = new FormData();
+            form.append('grant_type', 'refresh_token')
+            form.append('client_id', this.client_id)
+            form.append('refresh_token', refresh_token)
+    
+            axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
+                .then(res => {
+                    resolve(res.data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+        })
     }
 
-    async get<T>(base: APIBase, path: string): Promise<T> {
-        console.info("GET")
-        const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
-
-        try {
-            const req = await axios.get(`${base_uri}${path}`, {
+    get<T>(base: APIBase, path: string): Promise<T> {
+        return new Promise((resolve, reject) => {
+            console.info("GET")
+            const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
+    
+            axios.get(`${base_uri}${path}`, {
                 headers: {
                     'Authorization': `Bearer ${User.getAccessToken}`
                 }
+            }).then(res => {
+                resolve(res.data);
+            }).catch(err => {
+                reject(err)
             })
-
-            return req.data
-        } catch(error: any) {
-            // window.location.href = '/api/error';
-            // window.location.reload();
-            throw new Error(error);
-        }
+        })
     }
 
-    async post<T>(base: APIBase, path: string, data?: any): Promise<T> {
-        console.info("POST")
-        const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
+    post<T>(base: APIBase, path: string, data?: any): Promise<T> {
+        return new Promise((resolve, reject) => {
+            console.info("POST")
+            const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
 
-        try {
-            const req = await axios.post(`${base_uri}${path}`, data, {
+            axios.post(`${base_uri}${path}`, data, {
                 headers: {
                     'Authorization': `Bearer ${User.getAccessToken}`
                 }
+            }).then(res => {
+                resolve(res.data)
+            }).catch(err => {
+                console.log("Something went wrong")
+                reject(err);
             })
-
-            return req.data
-        } catch(error: any) {
-            console.log("Something went wrong")
-            throw new Error(error)
-        }
+        })
     }
 }
 
