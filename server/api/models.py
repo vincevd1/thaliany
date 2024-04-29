@@ -26,7 +26,7 @@ class anyTimerRequest(models.Model):
 
 class AnyTimerProof(models.Model):
     anytimer_id = models.IntegerField()
-    image = models.ImageField(upload_to='proofs/')
+    image_url = models.CharField(max_length=500)
     description = models.CharField(max_length=500, blank=True, null=True)
     proof_type = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)

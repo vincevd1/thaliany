@@ -93,7 +93,7 @@ def complete_anytimer(request, anytimer_id):
     photo = request.FILES["photo"]
 
     # Get dirname of /proofs
-    DIRNAME = os.path.dirname(__file__).replace("/api", "/proofs/")
+    DIRNAME = os.path.dirname(__file__).replace("/api", "/static/proofs/")
 
     # Make dir if not exists
     if not os.path.exists(DIRNAME):
@@ -101,6 +101,7 @@ def complete_anytimer(request, anytimer_id):
 
     # Get corresponding file path
     file_path = os.path.join(DIRNAME, anytimer_id + '.jpg') #renaming again to anytimer_id to avoid misuse
+    file_url = "http://localhost:8080/static/proofs/" + anytimer_id + '.jpg'
 
     # Save photo
     with open(file_path, 'wb') as file:
@@ -109,7 +110,7 @@ def complete_anytimer(request, anytimer_id):
 
     AnyTimerProof.objects.create(
         anytimer_id=anytimer_id,
-        image=file_path,
+        image_url=file_url,
         proof_type = request.POST.get("proof_type")
     )
 
@@ -203,7 +204,7 @@ def fetch_proof(request, anytimer_id):
     
     data = {
         'anytimer_id': proof.anytimer_id,
-        'image': proof.image.url,
+        'image': proof.image_url,
         'description': proof.description,
         'proof_type': proof.proof_type,
         'created_at': proof.created_at

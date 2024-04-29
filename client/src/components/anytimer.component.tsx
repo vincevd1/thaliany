@@ -149,7 +149,8 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                 state == "completed" && proof && (
                                     <>
                                         <h2>ANYTIMER PROOF</h2>
-                                        <span>Completed at {proof.anytimer_id}</span>
+                                        <span>Completed at {proof.created_at}</span>
+                                        <img src={proof.image} alt="proof" />
                                     </>
                                 )
                             }
