@@ -3,6 +3,7 @@ import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import anyTimer, anyTimerRequest, AnytimerStatus , AnyTimerProof
+from django.core.files import File
 import os
 
 @api_view(['POST'])
@@ -90,7 +91,9 @@ def complete_anytimer(request, anytimer_id):
     if(anyTimerProofExists):
         return Response(status=403)
     
-    photo = request.FILES["photo"]
+    file_data = request.FILES["file"]
+    extension = os.path.splitext(str(request.FILES['file']))[1]
+    proof_type = request.POST.get("proof_type")
 
     # Get dirname of /proofs
     DIRNAME = os.path.dirname(__file__).replace("/api", "/static/proofs/")
@@ -100,19 +103,18 @@ def complete_anytimer(request, anytimer_id):
         os.makedirs(DIRNAME)
 
     # Get corresponding file path
-    file_path = os.path.join(DIRNAME, anytimer_id + '.jpg') #renaming again to anytimer_id to avoid misuse
-    file_url = "http://localhost:8080/static/proofs/" + anytimer_id + '.jpg'
+    file_path = os.path.join(DIRNAME, anytimer_id + extension) #renaming again to anytimer_id to avoid misuse
+    file_url = "http://192.168.2.18:8080/static/proofs/" + anytimer_id + extension
 
-    # Save photo
-    with open(file_path, 'wb') as file:
-        for chunk in photo.chunks():
-            file.write(chunk)
+    with open(file_path, mode='wb') as dest:
+        for chunk in file_data.chunks():
+            dest.write(chunk)
 
     AnyTimerProof.objects.create(
         anytimer_id=anytimer_id,
-        image_url=file_url,
-        proof_type = request.POST.get("proof_type")
-    )
+        file_url=file_url,
+        proof_type = proof_type
+    )        
 
     # Set state to completed
     anytimer.status = AnytimerStatus.COMPLETED
@@ -204,7 +206,7 @@ def fetch_proof(request, anytimer_id):
     
     data = {
         'anytimer_id': proof.anytimer_id,
-        'image': proof.image_url,
+        'proof_file': proof.file_url,
         'description': proof.description,
         'proof_type': proof.proof_type,
         'created_at': proof.created_at

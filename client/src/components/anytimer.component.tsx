@@ -32,15 +32,6 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         }
     },[])
     
-    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!event.target.files) {
-            return;
-        }
-        const selectedFile = event.target.files[0];
-
-        setFile(URL.createObjectURL(selectedFile));
-    }
-
     function postAcceptAny() {
         APIService.post(
             APIBase.BACKEND,
@@ -81,35 +72,22 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         });
     }
 
-    function uploadProofForm() {
-        return(
-            <>
-                <div className="form-content">
-                    <span>Upload photo</span>
-                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi" name="photo" id="photo" onChange={handleChange} />
-                    <img src={file} className="picture" />
-                </div>
-                <div className="button-wrapper">
-                    <button className="confirm-button confirmation-button" type='submit' >
-                        Confirm
-                    </button>
-                </div>
-            </>
-        )
-    }
-
     function postCompleteAny(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         // THIS TOOK ME 3 HOURS TO FIGURE OUT AND IT DOES NOT EVEN LOOK THAT COMPLICATED
         // BUT ALSO THE DJANGO API ENDPOINT IS WORKING NOW BUT I DONT KNOW HOW
         // FOR CONTEXT THIS IS RIGHT AFTER THE KINGSDAY BORREL
         const formData = new FormData();
+        
         if (file) {
             fetch(file)
             .then(response => response.blob())
             .then(blob => {
-                formData.append('proof_type', "photo") //default for now
-                formData.append('photo',blob, AnyTimer.id+'.jpg');
+                const extension = blob.type.split("/")[1];
+                const proof_type = blob.type.split("/")[0];
+
+                formData.append('proof_type', proof_type)
+                formData.append('file', blob, `${AnyTimer.id}.${extension}`);
                 APIService.post(
                     APIBase.BACKEND, 
                     `/api/anytimers/confirmed/${AnyTimer.id}/complete/`, 
@@ -119,6 +97,15 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                 });
             });
         }
+    }
+
+    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        if (!event.target.files) {
+            return;
+        }
+        const selectedFile = event.target.files[0];
+
+        setFile(URL.createObjectURL(selectedFile));
     }
 
     if(showAnytimer) {
@@ -150,7 +137,13 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                     <>
                                         <h2>ANYTIMER PROOF</h2>
                                         <span>Completed at { new Date(proof.created_at).toUTCString() }</span>
-                                        <img src={proof.image} alt="proof" />
+                                        {
+                                            (proof.proof_type == "image") && <img src={proof.proof_file} className="picture" />
+                                        }
+                                        {
+                                            (proof.proof_type == "video") && 
+                                            <video width="480" height="270" controls><source src={proof.proof_file} type="video/mp4" /></video>
+                                        }
                                     </>
                                 )
                             }
@@ -171,9 +164,27 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                     COMPLETE
                                 </button>
                             }>
-                                <form onSubmit={postCompleteAny}>
-                                    {uploadProofForm()}
-                                </form>
+                                {
+                                    close => (
+                                        <form onSubmit={
+                                            e => {
+                                                postCompleteAny(e);
+                                                close()
+                                            }
+                                        }>
+                                            <div className="form-content">
+                                                <span>Upload photo</span>
+                                                <input type="file" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi" name="photo" id="photo" onChange={handleChange} />
+                                                <img src={file} className="picture" />
+                                            </div>
+                                            <div className="button-wrapper">
+                                                <button className="confirm-button confirmation-button" type='submit'>
+                                                    CONFIRM
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )
+                                }
                             </Popup>
                         )
                     }

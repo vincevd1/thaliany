@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-gnv#q+ybobfpcyrx461ffdb==692qn(23o7eqwp-vhhv$s#%kn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "192.168.2.18"
+]
 
 
 # Application definition
@@ -59,7 +61,8 @@ MIDDLEWARE = [
 # CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://192.168.2.18:5173"
 ]
 
 ROOT_URLCONF = 'server.urls'
