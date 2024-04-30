@@ -149,7 +149,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                 state == "completed" && proof && (
                                     <>
                                         <h2>ANYTIMER PROOF</h2>
-                                        <span>Completed at {proof.created_at}</span>
+                                        <span>Completed at { new Date(proof.created_at).toUTCString() }</span>
                                         <img src={proof.image} alt="proof" />
                                     </>
                                 )
@@ -158,14 +158,14 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                     </Popup>
 
                     {
-                        type == 'confirmed' && direction == 'outgoing' ? (
+                        type == 'confirmed' && direction == 'outgoing' && state == "unused" && (
                             <button className="anytimer-button" onClick={postUseAny}>
                                 USE
                             </button>
-                        ) : null
+                        ) 
                     }
                     {
-                        type == 'confirmed' && direction == 'incoming' && state == "used"? (
+                        type == 'confirmed' && direction == 'incoming' && state == "used" && (
                             <Popup title={"Complete anytimer from " + AnyTimer.owner_name} button={
                                 <button className="complete-button">
                                     COMPLETE
@@ -175,10 +175,10 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                     {uploadProofForm()}
                                 </form>
                             </Popup>
-                        ) : null
+                        )
                     }
                     {
-                        type == 'request' && direction == 'incoming' ? (
+                        type == 'request' && direction == 'incoming' && (
                             <>
                                 <button id="accept" className="anytimer-button" onClick={postAcceptAny}>
                                     ACCEPT
@@ -187,14 +187,14 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                     DECLINE
                                 </button>
                             </>
-                        ) : null
+                        )
                     }
                     {
-                        type == 'request' && direction == 'outgoing' ? (
+                        type == 'request' && direction == 'outgoing' && (
                             <button className="anytimer-button" onClick={postRevokeAny}>
                                 REVOKE
                             </button>
-                        ) : null
+                        )
                     }
                 </div>
             </div>

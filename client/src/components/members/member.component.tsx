@@ -16,7 +16,7 @@ export default function Member(thalia_user: ThaliaUser) {
         if(event.target.value == 'other' || showOtherTypeInputBox) setShowOtherTypeInputBox(!showOtherTypeInputBox);
     }
 
-    function giveOrRequestAnyForm() {
+    function giveOrRequestAnyForm(close: () => void) {
         return(
             <>
                 <div className="form-content">
@@ -36,7 +36,10 @@ export default function Member(thalia_user: ThaliaUser) {
                 </div>
                 <div className="button-wrapper">
                     <button className="confirm-button confirmation-button" type='submit' >
-                        Confirm
+                        CONFIRM
+                    </button>
+                    <button className='cancel-button confirmation-button' onClick={close}>
+                        CANCEL
                     </button>
                 </div>
             </>
@@ -96,9 +99,13 @@ export default function Member(thalia_user: ThaliaUser) {
                         GIVE ANY
                     </button>
                 }>
-                    <form onSubmit={postGiveAny}>
-                        {giveOrRequestAnyForm()}
-                    </form>
+                    {
+                        close => (
+                            <form onSubmit={postGiveAny}>
+                                {giveOrRequestAnyForm(close)}
+                            </form>
+                        )
+                    }
                 </Popup>
 
                 <Popup title={"Request anytimer from " + thalia_user.profile.display_name} button={
@@ -106,9 +113,13 @@ export default function Member(thalia_user: ThaliaUser) {
                         REQUEST ANY
                     </button>
                 }>
-                    <form onSubmit={postRequestAny}>
-                        {giveOrRequestAnyForm()}
-                    </form>
+                    {
+                        close => (
+                            <form onSubmit={postRequestAny}>
+                                {giveOrRequestAnyForm(close)}
+                            </form>
+                        )
+                    }
                 </Popup>
             </div>
         </div>
