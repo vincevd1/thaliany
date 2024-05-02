@@ -28,3 +28,34 @@
     gap: 2em;
     align-items: center;
 }
+
+.hamburger {
+    display: none;
+}
+
+.dropdown {
+    display: flex;
+    padding: 1em 2em 2em 2em;
+
+    font-size: 1.25em;
+
+    flex-direction: column;
+    gap: 1.5em;
+
+    background-color: var(--thalia-black);
+    border-bottom: 5px solid #d63384;
+}
+
+.dropdown > button {
+    height: 3em;
+}
+
+@media (max-width: 1000px) {
+    .header-nav {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+}

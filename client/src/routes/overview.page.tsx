@@ -43,6 +43,7 @@ export default function Overview() {
     if (User.getIsLoggedIn) {
         return (
             <>
+                <button onClick={() => notifications.notify("This is a long test message to check if the gap in the css is working correctly")}>Test</button>
                 <div className="welcome-wrapper">
                     <img className="profile-photo" src={avatar} alt="" />
                     <h1 className="welcome-header">HELLO {displayName.toUpperCase()}</h1>

@@ -12,6 +12,8 @@
     background-color: var(--thalia-black);
     border: 2px solid var(--thalia-pink);
     border-radius: 10px;
+
+    z-index: 100;
 }
 
 .popup-header {

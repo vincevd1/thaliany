@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './popup.component.css'
 import ReactDOM from "react-dom";
 
-interface PopupProps {
+type PopupProps = {
     title: string,
     children: React.ReactNode | ((close: () => void, isOpen: boolean) => React.ReactNode), 
     button: React.ReactElement
@@ -11,10 +11,17 @@ interface PopupProps {
 export default function Popup({ title, children, button }: PopupProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
+    function openPopup() {
+        document.body.style.overflow = "hidden";
+        setIsOpen(true);
+    }
+
     function closePopup() {
         if(isOpen) { 
             getPopupRoot().remove()
             setIsOpen(false);
+
+            document.body.style.overflow = "auto";
         }
     }
 
@@ -59,7 +66,7 @@ export default function Popup({ title, children, button }: PopupProps) {
                             button.props.onClick();
                         }
                         
-                        if(!isAnotherPopupOpen()) setIsOpen(true);
+                        if(!isAnotherPopupOpen()) openPopup();
                     }
                 })
             }

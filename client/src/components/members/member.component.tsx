@@ -51,9 +51,13 @@ export default function Member(thalia_user: ThaliaUser) {
         event.preventDefault();
         
         const formData = new FormData(event.currentTarget);
+
+        var type = formData.get('type')?.toString();
+        
+        if(type) type = type.charAt(0).toUpperCase() + type.slice(1);
         
         const data = {
-            'type': showOtherTypeInputBox ? formData.get('othertype') : formData.get('type'),
+            'type': showOtherTypeInputBox ? formData.get('othertype') : type,
             'description': formData.get('description'),
             'amount': formData.get('amount'),
         }
@@ -102,7 +106,7 @@ export default function Member(thalia_user: ThaliaUser) {
 
             <div className="interaction-buttons">
                 <Popup title={"Give Anytimer to " + thalia_user.profile.display_name} button={
-                    <button className="request-any">
+                    <button className="interaction-button">
                         GIVE ANY
                     </button>
                 }>
@@ -119,7 +123,7 @@ export default function Member(thalia_user: ThaliaUser) {
                 </Popup>
 
                 <Popup title={"Request anytimer from " + thalia_user.profile.display_name} button={
-                    <button className="request-any">
+                    <button className="interaction-button">
                         REQUEST ANY
                     </button>
                 }>

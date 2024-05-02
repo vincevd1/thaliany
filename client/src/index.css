@@ -86,3 +86,19 @@ select {
     color: var(--white);
     background-color: var(--light-black);
 }
+
+@media (max-width: 1400px) {
+    :root {
+        --width: 75%;
+    }
+}
+
+@media (max-width: 600px) {
+    :root {
+        --width: 80%;
+    }
+
+    body {
+        font-size: 0.8em;
+    }
+}

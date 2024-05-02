@@ -23,3 +23,17 @@
     color: var(--white);
     background-color: var(--light-black);
 }
+
+@media (max-width: 500px) {
+    .members-header {
+        margin-bottom: 1em;
+    }
+
+    .header-wrapper {
+        flex-direction: column;
+    }
+
+    .search-bar > input {
+        width: 100%;
+    }
+}

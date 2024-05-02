@@ -1,20 +1,23 @@
 .anytimer {
     display: flex;
-    flex: 1;
-    flex-wrap: wrap;
     min-height: 4em;
+
     margin: 1em 0;
     padding: 1em 1.5em;
+
     border-radius: 0.5em;
     align-items: center;
+    justify-content: space-between;
+
     background-color: var(--light-black);
 }
 
 .anytimer-info {
-    flex: 1;
-    flex-wrap: wrap;
     display: flex;
+    width: 100%;
+
     align-items: center;
+    justify-content: space-between;
 }
 
 .anytimer-info>span {
@@ -56,4 +59,43 @@
     flex-direction: column;
     width: 100%;
     margin-bottom: 1em;
+}
+
+@media (max-width: 1100px) {
+    .anytimer, .anytimer-info {
+        flex-direction: column;
+    }
+    
+    .anytimer-info {
+        margin-bottom: 1em;
+    }
+
+    .anytimer-buttons {
+        margin-left: 0;
+        justify-content: center;
+    }
+
+    .anytimer-button {
+        width: 8em;
+    }
+
+    .anytimer-info > span {
+        margin: 0.5em;
+    }
+
+    .anytimer-owner {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 400px) {
+    .anytimer-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .anytimer-button {
+        width: 100%;
+    }
 }

@@ -2,9 +2,10 @@ import { APIService, APIBase } from "../services/api.service";
 import Popup from './popup.component'
 import './anytimer.component.css'
 import AnyTimer from "../models/anytimer.model";
-import {FormEvent, useEffect, useState } from 'react';
+import {FormEvent, useState } from 'react';
 import AnyTimerProof from "../models/anytimerproof.model";
 import { useNotification } from "./notification.component";
+import Loading from "./loading.component";
 
 type Props = {
     AnyTimer: AnyTimer,
@@ -24,8 +25,8 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
     const [proof, setProof] = useState<AnyTimerProof>();
     const notifications = useNotification()
 
-    useEffect(() => {
-        if(state == "completed") {
+    function fetchProof() {
+        if(state == "completed" && !proof) {
             APIService.get<AnyTimerProof>(APIBase.BACKEND, `/api/proofs/${AnyTimer.id}`)
             .then(res => {
                 setProof(res);
@@ -34,7 +35,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                 notifications.notify("Something went wrong while trying to retrieve proofs")
             });
         }
-    },[])
+    }
     
     function postAcceptAny() {
         APIService.post(
@@ -139,13 +140,13 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         return (
             <div className="anytimer">
                 <div className="anytimer-info">
-                    <span>{displayName}</span>
+                    <span className="anytimer-owner">{displayName}</span>
                     <span>Amount: {amount}</span>
                     <span>Type: {AnyTimer.type}</span>
                 </div>
                 <div className="anytimer-buttons">
                     <Popup title={ (direction == 'outgoing') ? `ANYTIMER ON ${ AnyTimer.recipient_name.toUpperCase() }` : `ANYTIMER FROM ${ AnyTimer.owner_name.toUpperCase() }` } button={
-                        <button className="anytimer-button">
+                        <button className="anytimer-button" onClick={fetchProof}>
                             VIEW
                         </button>
                     }>
@@ -160,19 +161,23 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                             </div>
 
                             {
-                                state == "completed" && proof && (
-                                    <>
-                                        <h2>ANYTIMER PROOF</h2>
-                                        <span>Completed at { new Date(proof.created_at).toUTCString() }</span>
-                                        {
-                                            (proof.proof_type == "image") && <img src={proof.proof_file} className="picture" />
-                                        }
-                                        {
-                                            (proof.proof_type == "video") && 
-                                            <video width="480" height="270" controls className="picture"><source src={proof.proof_file} type="video/mp4" /></video>
-                                        }
-                                    </>
-                                )
+                                state == "completed" &&
+                                    (
+                                        proof ?
+                                        (
+                                            <>
+                                                <h2>ANYTIMER PROOF</h2>
+                                                <span>Completed at {new Date(proof.created_at).toUTCString()}</span>
+                                                {
+                                                    (proof.proof_type == "image") && <img src={proof.proof_file} className="picture" />
+                                                }
+                                                {
+                                                    (proof.proof_type == "video") &&
+                                                    <video width="480" height="270" controls className="picture"><source src={proof.proof_file} type="video/mp4" /></video>
+                                                }
+                                            </>
+                                        ) : <Loading />
+                                    ) 
                             }
                         </>
                     </Popup>
@@ -187,7 +192,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                     {
                         type == 'confirmed' && direction == 'incoming' && state == "used" && (
                             <Popup title={"Complete anytimer from " + AnyTimer.owner_name} button={
-                                <button className="complete-button">
+                                <button className="anytimer-button">
                                     COMPLETE
                                 </button>
                             }>

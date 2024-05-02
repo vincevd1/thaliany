@@ -17,15 +17,18 @@
     display: flex;
 
     width: 35em;
-    height: 4em;
+    min-height: 4em;
 
     padding: 1em;
     align-items: center;
     justify-content: space-between;
+    gap: 1em;
 
     background-color: var(--light-black);
-
     border: 1px solid var(--thalia-pink);
+
+    animation-name: jump-in;
+    animation-duration: 0.5s;
 }
 
 .timer-bar {
@@ -47,8 +50,20 @@
     animation-play-state: paused;
 } */
 
+@keyframes jump-in {
+    0% { transform: translateY(100%); }
+    50% { transform: translateY(-10%) }
+    100% { transform: translateY(0%); }
+}
+
 @keyframes decrease {
     from { width: 100%; }
     to { width: 0%; }
+}
+
+@media (max-width: 475px) {
+    .notification {
+        width: 25em;
+    }
 }
 
