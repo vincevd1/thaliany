@@ -30,3 +30,29 @@
 .loading {
     margin-top: 2em;
 }
+
+.not-logged-in {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.not-logged-in > h1 {
+    margin: 1em 0;
+}
+
+.not-logged-in > p {
+    margin-bottom: 1em;
+}
+
+.not-logged-in > button {
+    display: flex;
+    font-size: 1em;
+    
+    align-items: center;
+    gap: 0.5em;
+}

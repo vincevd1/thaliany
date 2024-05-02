@@ -1,6 +1,4 @@
-enum APIBase {
+export enum APIBase {
     CONCREXIT,
     BACKEND
 }
-
-export default APIBase

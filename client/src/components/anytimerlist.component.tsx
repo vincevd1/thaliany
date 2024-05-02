@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import AnyTimerComponent from "./anytimer.component"
 import AnyTimer from '../models/anytimer.model'
-import APIService from "../services/api.service"
-import APIBase from "../enums/apibase.enum"
+import { APIService, APIBase } from "../services/api.service"
 import "./anytimerlist.component.css"
 import Loading from "./loading.component"
+import { useNotification } from "./notification.component"
 
-interface ListProps {
+type ListProps = {
 	list_type: 'confirmed' | 'request'
 	direction: 'incoming' | 'outgoing'
 	state: 'used' | 'unused' | 'completed'
@@ -14,20 +14,30 @@ interface ListProps {
 
 export default function AnyTimerList({ list_type, direction, state}: ListProps) {
 	const [anytimerList, setAnytimerList] = useState<AnyTimer[]>()
+	const notifications = useNotification()
 
 	useEffect(() => {
-		async function fetchAnytimers() {
+		function fetchAnytimers() {
 			if (list_type == 'request') {
-				const list: AnyTimer[] = await APIService.get(APIBase.BACKEND, `/api/anytimers/requests/${direction}`)
-				
-				setAnytimerList(list.reverse());
+				APIService.get<AnyTimer[]>(APIBase.BACKEND, `/api/anytimers/requests/${direction}`)
+					.then(list => {
+						setAnytimerList(list.reverse());
+					})
+					.catch(() => {
+						notifications.notify("Something went wrong while trying to fetch anytimers!");	
+					})
 			} else if (list_type == 'confirmed') {
-				const list: AnyTimer[] = await APIService.get(APIBase.BACKEND, `/api/anytimers/confirmed/${direction}`)
-				const filteredList = list.filter((anytimer) => {
-					return anytimer.status == state
-				})
-
-				setAnytimerList(filteredList.reverse());
+				APIService.get<AnyTimer[]>(APIBase.BACKEND, `/api/anytimers/confirmed/${direction}`)
+					.then(list => {
+						const filteredList = list.filter((anytimer) => {
+							return anytimer.status == state
+						})
+		
+						setAnytimerList(filteredList.reverse());
+					})
+					.catch(() => {
+						notifications.notify("Something went wrong while trying to fetch anytimers!");	
+					})
 			}
 		}
 

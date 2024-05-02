@@ -1,0 +1,54 @@
+.notification-root {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1em;
+    position: fixed;
+
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%);
+
+    z-index: 100;
+}
+
+.notification {
+    position: relative;
+    display: flex;
+
+    width: 35em;
+    height: 4em;
+
+    padding: 1em;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: var(--light-black);
+
+    border: 1px solid var(--thalia-pink);
+}
+
+.timer-bar {
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 5px;
+
+    background-color: var(--thalia-pink);
+
+    animation-name: decrease;
+    animation-timing-function: linear;
+}
+
+/* .notification:hover > .timer-bar {
+    animation-play-state: paused;
+} */
+
+@keyframes decrease {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+

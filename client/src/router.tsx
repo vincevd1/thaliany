@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import Root from './routes/root.tsx'
+import Root from './root.tsx'
 import ErrorPage from './error.page.tsx'
 import AuthCallback from './routes/auth/callback.page.tsx'
 import Overview from './routes/overview.page.tsx'

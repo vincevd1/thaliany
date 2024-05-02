@@ -1,15 +1,15 @@
-import APIService from "../services/api.service";
+import { APIService, APIBase } from "../services/api.service";
 import Popup from './popup.component'
-import APIBase from "../enums/apibase.enum";
 import './anytimer.component.css'
 import AnyTimer from "../models/anytimer.model";
 import {FormEvent, useEffect, useState } from 'react';
 import AnyTimerProof from "../models/anytimerproof.model";
+import { useNotification } from "./notification.component";
 
-interface Props {
+type Props = {
     AnyTimer: AnyTimer,
-    direction: 'outgoing' | 'incoming'
-    type: 'confirmed' | 'request'
+    direction: 'outgoing' | 'incoming',
+    type: 'confirmed' | 'request',
     state: 'used' | 'unused' | 'completed'
 }
 
@@ -20,15 +20,19 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
     const [showAnytimer, setShowAnytimer] = useState(true);
     const [amount, setAmount] = useState(AnyTimer.amount);
     const [file, setFile] = useState<string>();
+    const [fileType, setFileType] = useState<string>();
     const [proof, setProof] = useState<AnyTimerProof>();
+    const notifications = useNotification()
 
     useEffect(() => {
         if(state == "completed") {
             APIService.get<AnyTimerProof>(APIBase.BACKEND, `/api/proofs/${AnyTimer.id}`)
             .then(res => {
-                console.log(res)
                 setProof(res);
             })
+            .catch(() => {
+                notifications.notify("Something went wrong while trying to retrieve proofs")
+            });
         }
     },[])
     
@@ -38,6 +42,10 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             `/api/anytimers/requests/${AnyTimer.id}/accept/`
         ).then(() => {
             setShowAnytimer(false)
+            notifications.notify(`Successfully accepted request from ${ AnyTimer.owner_name }`);
+        })
+        .catch(() => {
+            notifications.notify("Something went wrong while trying to accept anytimer")
         });
     }
 
@@ -47,6 +55,10 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             `/api/anytimers/requests/${AnyTimer.id}/deny/`
         ).then(() => {
             setShowAnytimer(false)
+            notifications.notify(`Successfully denied request from ${ AnyTimer.owner_name }`);
+        })
+        .catch(() => {
+            notifications.notify("Something went wrong while trying to deny anytimer")
         });
     }
 
@@ -56,6 +68,10 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             `/api/anytimers/requests/${AnyTimer.id}/revoke/`
         ).then(() => {
             setShowAnytimer(false)
+            notifications.notify(`Successfully revoked outgoing request to ${ AnyTimer.recipient_name }`);
+        })
+        .catch(() => {
+            notifications.notify("Something went wrong while trying to revoke anytimer")
         });
     }
 
@@ -69,6 +85,11 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
             } else {
                 setAmount(amount - 1);
             }
+
+            notifications.notify("Successfully used anytimer!");
+        })
+        .catch(() => {
+            notifications.notify("Something went wrong while trying to use anytimer")
         });
     }
 
@@ -88,12 +109,17 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
 
                 formData.append('proof_type', proof_type)
                 formData.append('file', blob, `${AnyTimer.id}.${extension}`);
+
                 APIService.post(
                     APIBase.BACKEND, 
                     `/api/anytimers/confirmed/${AnyTimer.id}/complete/`, 
                     formData
                 ).then(() => {
+                    notifications.notify("Successfully completed anytimer!");
                     setShowAnytimer(false)
+                })
+                .catch(() => {
+                    notifications.notify("Something went wrong while trying to complete anytimer")
                 });
             });
         }
@@ -106,6 +132,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
         const selectedFile = event.target.files[0];
 
         setFile(URL.createObjectURL(selectedFile));
+        setFileType(selectedFile.type.split("/")[0]);
     }
 
     if(showAnytimer) {
@@ -142,7 +169,7 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                         }
                                         {
                                             (proof.proof_type == "video") && 
-                                            <video width="480" height="270" controls><source src={proof.proof_file} type="video/mp4" /></video>
+                                            <video width="480" height="270" controls className="picture"><source src={proof.proof_file} type="video/mp4" /></video>
                                         }
                                     </>
                                 )
@@ -175,7 +202,13 @@ export default function AnyTimerComponent({ AnyTimer, direction, type , state }:
                                             <div className="form-content">
                                                 <span>Upload photo</span>
                                                 <input type="file" accept=".png,.jpg,.jpeg,.gif,.mp4,.mov,.avi" name="photo" id="photo" onChange={handleChange} />
-                                                <img src={file} className="picture" />
+                                                {
+                                                    (fileType == 'image') && <img src={file} className="picture" />
+                                                }
+                                                {
+                                                    (fileType == 'video') &&
+                                                    <video width="480" height="270" controls className="picture"><source src={file} type="video/mp4" /></video>
+                                                }
                                             </div>
                                             <div className="button-wrapper">
                                                 <button className="confirm-button confirmation-button" type='submit'>

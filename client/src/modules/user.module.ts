@@ -1,5 +1,5 @@
 import Credentials from "../models/credentials.model";
-import APIService from "../services/api.service";
+import { APIService } from "../services/api.service";
 
 class _User {
     private isLoggedIn: boolean | null;

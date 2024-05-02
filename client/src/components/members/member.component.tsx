@@ -4,13 +4,14 @@ import './member.component.css'
 import './confirmation.popup.css'
 import '../../index.css'
 import { ChangeEvent, FormEvent, useState } from 'react';
-import APIService from '../../services/api.service'
-import APIBase from '../../enums/apibase.enum'
+import { APIService, APIBase } from '../../services/api.service'
 import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../notification.component'
 
 export default function Member(thalia_user: ThaliaUser) {
     const [showOtherTypeInputBox, setShowOtherTypeInputBox] = useState(false);
     const navigate = useNavigate();
+    const notifications = useNotification();
 
     function toggleOtherInputBox(event: ChangeEvent<HTMLSelectElement>) {
         if(event.target.value == 'other' || showOtherTypeInputBox) setShowOtherTypeInputBox(!showOtherTypeInputBox);
@@ -63,6 +64,9 @@ export default function Member(thalia_user: ThaliaUser) {
             data
         ).then(() => {
             navigate('/');
+            notifications.notify(`Successfully gave anytimer to ${thalia_user.profile.display_name}`)
+        }).catch(() => {
+            notifications.notify("Something went wrong while trying to give anytimer")
         });
     }
 
@@ -83,6 +87,9 @@ export default function Member(thalia_user: ThaliaUser) {
             data
         ).then(() => {
             navigate('/requests');
+            notifications.notify(`Successfully requested anytimer from ${thalia_user.profile.display_name}`)
+        }).catch(() => {
+            notifications.notify("Something went wrong while trying to request anytimer")
         });
     }
 
@@ -101,7 +108,10 @@ export default function Member(thalia_user: ThaliaUser) {
                 }>
                     {
                         close => (
-                            <form onSubmit={postGiveAny}>
+                            <form onSubmit={e => {
+                                postGiveAny(e)
+                                close()
+                            }}>
                                 {giveOrRequestAnyForm(close)}
                             </form>
                         )
@@ -115,7 +125,10 @@ export default function Member(thalia_user: ThaliaUser) {
                 }>
                     {
                         close => (
-                            <form onSubmit={postRequestAny}>
+                            <form onSubmit={e => {
+                                postRequestAny(e)
+                                close()
+                            }}>
                                 {giveOrRequestAnyForm(close)}
                             </form>
                         )

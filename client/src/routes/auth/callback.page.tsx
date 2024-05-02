@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Credentials from '../../models/credentials.model';
 import User from '../../modules/user.module';
-import APIService from '../../services/api.service'
+import { APIService } from '../../services/api.service'
 
 export default function AuthCallback() {
     const url = new URL(window.location.href);

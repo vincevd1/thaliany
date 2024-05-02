@@ -1,7 +1,11 @@
 import axios from "axios";
 import Credentials from "../models/credentials.model";
 import User from "../modules/user.module";
-import APIBase from "../enums/apibase.enum";
+
+enum APIBase {
+    CONCREXIT,
+    BACKEND
+}
 
 class _APIService {
     backend_uri: string;
@@ -136,4 +140,7 @@ const APIService = new _APIService(
     localStorage.getItem('code_challenge')
 )
 
-export default APIService
+export {
+    APIService,
+    APIBase
+}
