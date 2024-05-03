@@ -1,5 +1,5 @@
 form {
-    width: 65%;
+    width: 90%;
 }
 
 .form-content {
@@ -10,12 +10,15 @@ form {
 }
 
 textarea#description {
-    height: 4em;
+    height: 6em;
     resize: none;
+
+    text-align: start;
+    padding: 0.5em
 }
 
 select#type {
-    padding-top: 0.6em;
+    height: 2em;
 }
 
 .button-wrapper {

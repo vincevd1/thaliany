@@ -44,13 +44,17 @@ export default function AnyTimerList({ list_type, direction, state}: ListProps) 
 		fetchAnytimers();
 	}, [])
 
+	function removeAnytimer(id: number) {
+		setAnytimerList((previous) => previous?.filter(anytimer => anytimer.id != id));
+	}
+
 	return (
 		<div className="anytimerList">
 			{
 				anytimerList ? 
 				(
 					anytimerList.length > 0 ?
-						anytimerList.map(anytimer => <AnyTimerComponent AnyTimer={anytimer} direction={direction} type={list_type} state={state} key={anytimer.id} />)
+						anytimerList.map(anytimer => <AnyTimerComponent AnyTimer={anytimer} direction={direction} type={list_type} state={state} remove={removeAnytimer} key={anytimer.id} />)
 					: 
 						<div className="no-anys-found">
 							No anytimers found!

@@ -5,12 +5,12 @@ import './confirmation.popup.css'
 import '../../index.css'
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { APIService, APIBase } from '../../services/api.service'
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../notification.component'
 
 export default function Member(thalia_user: ThaliaUser) {
     const [showOtherTypeInputBox, setShowOtherTypeInputBox] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const notifications = useNotification();
 
     function toggleOtherInputBox(event: ChangeEvent<HTMLSelectElement>) {
@@ -67,10 +67,14 @@ export default function Member(thalia_user: ThaliaUser) {
             `/api/users/${thalia_user.pk}/give/`, 
             data
         ).then(() => {
-            navigate('/');
+            // navigate("/");
             notifications.notify(`Successfully gave anytimer to ${thalia_user.profile.display_name}`)
-        }).catch(() => {
-            notifications.notify("Something went wrong while trying to give anytimer")
+        }).catch((err: any) => {
+            if(err.response?.data.message) {
+                notifications.notify(`${ err.response?.data.message }`)
+            } else {
+                notifications.notify("Something went wrong while trying to give anytimer")
+            }
         });
     }
 
@@ -78,9 +82,12 @@ export default function Member(thalia_user: ThaliaUser) {
         event.preventDefault();
         
         const formData = new FormData(event.currentTarget);
+        var type = formData.get('type')?.toString();
+        
+        if(type) type = type.charAt(0).toUpperCase() + type.slice(1);
 
         const data = {
-            'type': showOtherTypeInputBox ? formData.get('othertype') : formData.get('type'),
+            'type': showOtherTypeInputBox ? formData.get('othertype') : type,
             'description': formData.get('description'),
             'amount': formData.get('amount'),
         }
@@ -90,10 +97,14 @@ export default function Member(thalia_user: ThaliaUser) {
             `/api/users/${thalia_user.pk}/request/`, 
             data
         ).then(() => {
-            navigate('/requests');
+            // navigate('/requests');
             notifications.notify(`Successfully requested anytimer from ${thalia_user.profile.display_name}`)
-        }).catch(() => {
-            notifications.notify("Something went wrong while trying to request anytimer")
+        }).catch((err: any) => {
+            if(err.response?.data.message) {
+                notifications.notify(`${ err.response?.data.message }`)
+            } else {
+                notifications.notify("Something went wrong while trying to request anytimer")
+            }
         });
     }
 
@@ -105,7 +116,7 @@ export default function Member(thalia_user: ThaliaUser) {
             </div>
 
             <div className="interaction-buttons">
-                <Popup title={"Give Anytimer to " + thalia_user.profile.display_name} button={
+                <Popup title={"GIVE ANYTIMER TO " + thalia_user.profile.display_name.toUpperCase()} button={
                     <button className="interaction-button">
                         GIVE ANY
                     </button>
@@ -122,7 +133,7 @@ export default function Member(thalia_user: ThaliaUser) {
                     }
                 </Popup>
 
-                <Popup title={"Request anytimer from " + thalia_user.profile.display_name} button={
+                <Popup title={"REQUEST ANYTIMER FROM " + thalia_user.profile.display_name.toUpperCase() } button={
                     <button className="interaction-button">
                         REQUEST ANY
                     </button>

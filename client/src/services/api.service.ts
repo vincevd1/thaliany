@@ -96,7 +96,7 @@ class _APIService {
 
     get<T>(base: APIBase, path: string): Promise<T> {
         return new Promise((resolve, reject) => {
-            console.info("GET")
+            // console.info("GET")
             const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
     
             axios.get(`${base_uri}${path}`, {
@@ -113,7 +113,7 @@ class _APIService {
 
     post<T>(base: APIBase, path: string, data?: any): Promise<T> {
         return new Promise((resolve, reject) => {
-            console.info("POST")
+            // console.info("POST")
             const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
 
             axios.post(`${base_uri}${path}`, data, {
@@ -123,7 +123,6 @@ class _APIService {
             }).then(res => {
                 resolve(res.data)
             }).catch(err => {
-                console.log("Something went wrong")
                 reject(err);
             })
         })

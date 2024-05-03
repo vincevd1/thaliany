@@ -50,14 +50,74 @@
 }
 
 .picture {
+    margin-top: 1em;
+
     max-width: 100%;
-    max-height: 100%;
+    max-height: 25em;
 }
 
 .detailed-anytimer-info {
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin-bottom: 1em;
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-file-button {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+
+    width: 15em;
+    padding: 0.5em 1em;
+    margin: 1em auto 0 auto;
+
+    border-radius: 0.25em;
+    border: none;
+
+    background-color: var(--thalia-pink);
+    color: var(--white);
+}
+
+.upload-file-button:hover {
+    background-color: var(--pink-highlight);
+    cursor: pointer;
+}
+
+.checkbox-input-wrapper {
+    display: flex;
+    gap: 1em;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.promise-checkbox-label {
+    width: 100%;
+}
+
+.selectedfile-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.oath {
+    font-weight: bold;
+    text-align: center;
+
+    margin-top: 2em;
+}
+
+.file-size-limit {
+    width: 100%;
+    text-align: center;
+
     margin-bottom: 1em;
 }
 

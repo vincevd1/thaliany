@@ -16,7 +16,10 @@ def give_any(request, target_id):
             'Authorization': request.headers['Authorization']
         })
     
-    
+    if(target_id == str(request.thalia_user['pk'])):
+        return Response(data={
+            'message': "You cannot send an anytimer to yourself"
+        }, status=400)
 
     anyTimer.objects.create(
         owner_id=target_id,
@@ -39,6 +42,11 @@ def request_any(request, target_id):
     res = requests.get(f'https://staging.thalia.nu/api/v2/members/{target_id}', headers={
             'Authorization': request.headers['Authorization']
         })
+    
+    if(target_id == str(request.thalia_user['pk'])):
+        return Response(data={
+            'message': "You cannot request an anytimer from yourself"
+        }, status=400)
 
     anyTimerRequest.objects.create(
         requester_id=request.thalia_user['pk'],
@@ -82,6 +90,10 @@ def use_anytimer(request, anytimer_id):
 
 @api_view(['POST'])
 def complete_anytimer(request, anytimer_id):
+    image_extensions = [ "ase", "art", "bmp", "blp", "cd5", "cit", "cpt", "cr2", "cut", "dds", "dib", "djvu", "egt", "exif", "gif", "gpl", "grf", "icns", "ico", "iff", "jng", "jpeg", "jpg", "jfif", "jp2", "jps", "lbm", "max", "miff", "mng", "msp", "nef", "nitf", "ota", "pbm", "pc1", "pc2", "pc3", "pcf", "pcx", "pdn", "pgm", "PI1", "PI2", "PI3", "pict", "pct", "pnm", "pns", "ppm", "psb", "psd", "pdd", "psp", "px", "pxm", "pxr", "qfx", "raw", "rle", "sct", "sgi", "rgb", "int", "bw", "tga", "tiff", "tif", "vtf", "xbm", "xcf", "xpm", "3dv", "amf", "ai", "awg", "cgm", "cdr", "cmx", "dxf", "e2d", "egt", "eps", "fs", "gbr", "odg", "svg", "stl", "vrml", "x3d", "sxd", "v2d", "vnd", "wmf", "emf", "art", "xar", "png", "webp", "jxr", "hdp", "wdp", "cur", "ecw", "iff", "lbm", "liff", "nrrd", "pam", "pcx", "pgf", "sgi", "rgb", "rgba", "bw", "int", "inta", "sid", "ras", "sun", "tga", "heic", "heif" ]
+    video_extensions = ["webm", "mkv", "flv", "vob", "ogv", "ogg", "rrc", "gifv", "mng", "mov", "avi", "qt", "wmv", "yuv", "rm", "asf", "amv", "mp4", "m4p", "m4v", "mpg", "mp2", "mpeg", "mpe", "mpv", "m4v", "svi", "3gp", "3g2", "mxf", "roq", "nsv", "flv", "f4v", "f4p", "f4a", "f4b", "mod", "quicktime"]
+    max_file_size = 25000000
+
     anytimer = anyTimer.objects.get(recipient_id=request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
 
     if (not anytimer): #Check if there is actually a anytimer and not just a random picture uploaded
@@ -91,36 +103,56 @@ def complete_anytimer(request, anytimer_id):
     if(anyTimerProofExists):
         return Response(status=403)
     
-    file_data = request.FILES["file"]
-    extension = os.path.splitext(str(request.FILES['file']))[1]
     proof_type = request.POST.get("proof_type")
+    
+    if(not request.FILES and proof_type): # If there was no file uploaded but the person did the anytimer anyways and promises so
+        AnyTimerProof.objects.create(
+            anytimer_id=anytimer_id,
+            proof_type = proof_type
+        )   
 
-    # Get dirname of /proofs
-    DIRNAME = os.path.dirname(__file__).replace("/api", "/static/proofs/")
+        anytimer.status = AnytimerStatus.COMPLETED
+        anytimer.save()
 
-    # Make dir if not exists
-    if not os.path.exists(DIRNAME):
-        os.makedirs(DIRNAME)
+        return Response(status=200)
+    
+    file_data = request.FILES["file"]
+    extension = os.path.splitext(str(request.FILES['file']))[1].replace(".", "")
 
-    # Get corresponding file path
-    file_path = os.path.join(DIRNAME, anytimer_id + extension) #renaming again to anytimer_id to avoid misuse
-    file_url = "http://192.168.2.18:8080/static/proofs/" + anytimer_id + extension
+    if(file_data.size > max_file_size):
+        return Response(data={
+            'message': "File exceeds maximum file size!"
+        }, status=400)
 
-    with open(file_path, mode='wb') as dest:
-        for chunk in file_data.chunks():
-            dest.write(chunk)
+    if(extension in video_extensions or extension in image_extensions):
+        # Get dirname of /proofs
+        DIRNAME = os.path.dirname(__file__).replace("/api", "/static/proofs/")
 
-    AnyTimerProof.objects.create(
-        anytimer_id=anytimer_id,
-        file_url=file_url,
-        proof_type = proof_type
-    )        
+        # Make dir if not exists
+        if not os.path.exists(DIRNAME):
+            os.makedirs(DIRNAME)
 
-    # Set state to completed
-    anytimer.status = AnytimerStatus.COMPLETED
-    anytimer.save()
+        # Get corresponding file path
+        file_path = os.path.join(DIRNAME, anytimer_id + "." + extension) #renaming again to anytimer_id to avoid misuse
+        file_url = "http://192.168.2.18:8080/static/proofs/" + anytimer_id + "." + extension
 
-    return Response(status=200)
+        with open(file_path, mode='wb') as dest:
+            for chunk in file_data.chunks():
+                dest.write(chunk)
+
+        AnyTimerProof.objects.create(
+            anytimer_id=anytimer_id,
+            file_url=file_url,
+            proof_type = proof_type
+        )        
+
+        # Set state to completed
+        anytimer.status = AnytimerStatus.COMPLETED
+        anytimer.save()
+
+        return Response(status=200)
+    else:
+        return Response(status=415)
 
 @api_view(['POST'])
 def accept_anytimer(request ,request_id):

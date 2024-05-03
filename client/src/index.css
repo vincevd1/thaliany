@@ -73,10 +73,15 @@ button:hover {
     cursor: pointer;
 }
 
+button:disabled {
+    cursor: default;
+    opacity: 60%;
+}
+
 input,
 textarea,
 select {
-    all: unset;
+    appearance: none;
 
     height: 2em;
     border-radius: 0.5em;
@@ -85,6 +90,32 @@ select {
 
     color: var(--white);
     background-color: var(--light-black);
+}
+
+input[type="checkbox"] {
+    width: 1.75em;
+    height: 1.75em;
+
+    transform: translateY(-0.075em);
+
+    display: grid;
+    place-content: center;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.75em;
+    height: 0.75em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--thalia-pink);
+
+    transform-origin: bottom left;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+  
+input[type="checkbox"]:checked::before {
+    transform: scale(1);
 }
 
 @media (max-width: 1400px) {

@@ -13,6 +13,8 @@
 }
 
 .header-container {
+    position: relative;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -20,7 +22,11 @@
     height: 100%;
     width: var(--width);
 
+    background-color: var(--thalia-black);
+
     margin: 0 auto;
+
+    z-index: 3;
 }
 
 .header-nav {
@@ -44,10 +50,18 @@
 
     background-color: var(--thalia-black);
     border-bottom: 5px solid #d63384;
+
+    animation: dropdown;
+    animation-duration: 0.5s;
 }
 
 .dropdown > button {
     height: 3em;
+}
+
+@keyframes dropdown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0%); }
 }
 
 @media (max-width: 1000px) {
