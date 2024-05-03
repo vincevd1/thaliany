@@ -1,3 +1,14 @@
+#root {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
 .welcome-wrapper {
     display: flex;
     flex-direction: column;
@@ -55,4 +66,26 @@
     
     align-items: center;
     gap: 0.5em;
+}
+
+.credits-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 4em;
+    width: 100%;
+
+    border-top: 3px solid #d63384;
+    background-color: var(--thalia-pink);
+
+    margin-top: 2em;
+    padding: 0 2em;
+}
+
+@media (max-width: 500px) {
+    .credits-footer {
+        flex-direction: column;
+        justify-content: center;
+    }
 }

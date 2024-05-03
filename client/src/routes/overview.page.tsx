@@ -6,8 +6,10 @@ import './overview.page.css'
 import AnyTimerList from "../components/anytimerlist.component";
 import Loading from "../components/loading.component";
 import { useNotification } from "../components/notification.component";
+import ReactDOM from "react-dom";
 
 export default function Overview() {
+    const rootNode = document.getElementById('root');
     const [avatar, setAvatar] = useState('');
     const [displayName, setDisplayName] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -55,6 +57,16 @@ export default function Overview() {
                 <AnyTimerList list_type='confirmed' direction='outgoing' state="unused"/>
                 <h2>ANYTIMERS ON YOU</h2>
                 <AnyTimerList list_type='confirmed' direction='incoming' state="unused"/>
+
+                {
+                    rootNode &&
+                    ReactDOM.createPortal((
+                        <footer className="credits-footer">
+                            <span>MADE FOR R&D '24</span>
+                            <span>LUUK SCHUKKINK AND VINCE VAN DIERMEN</span>
+                        </footer>
+                        ), rootNode)
+                }
             </>
         )
     } else {
