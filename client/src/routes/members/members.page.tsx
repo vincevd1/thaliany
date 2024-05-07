@@ -1,9 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MemberList from "../../components/members/memberlist.component";
 import './members.page.css'
 import Loading from "../../components/loading.component";
+import { useNavigate } from "react-router-dom";
+import User from "../../modules/user.module";
 
 export default function Members() {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!User.getIsLoggedIn) {
+            navigate("/")
+        }
+    }, [])
+
     const [search, setSearch] = useState<string>('')
     const [searching, setSearching] = useState<boolean>(false)
 
@@ -21,24 +31,26 @@ export default function Members() {
         }, 1000)
     }
 
-    return(
-        <div className="member-page-wrapper">
-            <div className="header-wrapper">
-                <h1 className="members-header">MEMBERS</h1>
-                <div className="search-bar">
-                    <h2>SEARCH:</h2>
-                    <input type="search" name="Search" className="search-box" onChange={ e => handleSearch(e) } />
+    if(User.getIsLoggedIn) {
+        return(
+            <div className="member-page-wrapper">
+                <div className="header-wrapper">
+                    <h1 className="members-header">MEMBERS</h1>
+                    <div className="search-bar">
+                        <h2>SEARCH:</h2>
+                        <input type="search" name="Search" className="search-box" onChange={ e => handleSearch(e) } />
+                    </div>
+    
                 </div>
-
+    
+                {
+                    searching ? (
+                        <Loading />
+                    ):(
+                        <MemberList search={search}/>
+                    )
+                }
             </div>
-
-            {
-                searching ? (
-                    <Loading />
-                ):(
-                    <MemberList search={search}/>
-                )
-            }
-        </div>
-    )
+        )
+    }
 }

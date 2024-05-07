@@ -134,7 +134,7 @@ def complete_anytimer(request, anytimer_id):
 
         # Get corresponding file path
         file_path = os.path.join(DIRNAME, anytimer_id + "." + extension) #renaming again to anytimer_id to avoid misuse
-        file_url = "http://192.168.2.18:8080/static/proofs/" + anytimer_id + "." + extension
+        file_url = "http://localhost:8080/static/proofs/" + anytimer_id + "." + extension
 
         with open(file_path, mode='wb') as dest:
             for chunk in file_data.chunks():
