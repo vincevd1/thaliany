@@ -25,8 +25,8 @@ class anyTimerRequest(models.Model):
     description = models.CharField(max_length=500, blank=True, null=True)
 
 class AnyTimerProof(models.Model):
-    anytimer_id = models.IntegerField()
-    file_url = models.CharField(max_length=500, null=True)
+    anytimer = models.OneToOneField(anyTimer, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="static/proofs", null=True)
     description = models.CharField(max_length=500, blank=True, null=True)
     proof_type = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)

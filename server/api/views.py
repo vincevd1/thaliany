@@ -1,9 +1,10 @@
 import json
+from django.shortcuts import get_object_or_404
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import anyTimer, anyTimerRequest, AnytimerStatus , AnyTimerProof
-from django.core.files import File
+from django.db.models import Q
 import os
 
 @api_view(['POST'])
@@ -125,24 +126,9 @@ def complete_anytimer(request, anytimer_id):
         }, status=400)
 
     if(extension in video_extensions or extension in image_extensions):
-        # Get dirname of /proofs
-        DIRNAME = os.path.dirname(__file__).replace("/api", "/static/proofs/")
-
-        # Make dir if not exists
-        if not os.path.exists(DIRNAME):
-            os.makedirs(DIRNAME)
-
-        # Get corresponding file path
-        file_path = os.path.join(DIRNAME, anytimer_id + "." + extension) #renaming again to anytimer_id to avoid misuse
-        file_url = "http://localhost:8080/static/proofs/" + anytimer_id + "." + extension
-
-        with open(file_path, mode='wb') as dest:
-            for chunk in file_data.chunks():
-                dest.write(chunk)
-
         AnyTimerProof.objects.create(
             anytimer_id=anytimer_id,
-            file_url=file_url,
+            file=file_data,
             proof_type = proof_type
         )        
 
@@ -234,11 +220,11 @@ def fetch_anytimers(request, direction):
 
 @api_view(['GET'])
 def fetch_proof(request, anytimer_id):
-    proof = AnyTimerProof.objects.get(anytimer_id=anytimer_id)
-    
+    proof = get_object_or_404(AnyTimerProof.objects.filter(Q(anytimer__owner_id=request.thalia_user['pk']) | Q(anytimer__recipient_id=request.thalia_user['pk'])), anytimer=anytimer_id)
+
     data = {
         'anytimer_id': proof.anytimer_id,
-        'proof_file': proof.file_url,
+        'proof_file': proof.file.url,
         'description': proof.description,
         'proof_type': proof.proof_type,
         'created_at': proof.created_at
