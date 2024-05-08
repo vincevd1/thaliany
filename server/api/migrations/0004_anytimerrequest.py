@@ -6,19 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0003_alter_anytimer_description_alter_anytimer_id'),
+        ("api", "0003_alter_anytimer_description_alter_anytimer_id"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='anyTimerRequest',
+            name="AnyTimerRequest",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('requester_id', models.IntegerField()),
-                ('recipient_id', models.IntegerField()),
-                ('amount', models.IntegerField()),
-                ('type', models.CharField(max_length=500)),
-                ('description', models.CharField(blank=True, max_length=500, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("requester_id", models.IntegerField()),
+                ("recipient_id", models.IntegerField()),
+                ("amount", models.IntegerField()),
+                ("type", models.CharField(max_length=500)),
+                (
+                    "description",
+                    models.CharField(blank=True, max_length=500, null=True),
+                ),
             ],
         ),
     ]

@@ -1,0 +1,24 @@
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: infra/server/Dockerfile
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: infra/nginx/Dockerfile
+    environment:
+      # See https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v4.3.0/docs/advanced_usage.md#local-ca
+      USE_LOCAL_CA: 1
+      CERTBOT_EMAIL: vvandiermen+thaliany@members.thalia.nu
+      SITE_DOMAIN: localhost
+      # DEBUG: 1
+    volumes:
+      - nginx-local-ca:/etc/local_ca:rw
+    ports:
+      - 80:80
+      - 443:443
+
+volumes:
+  nginx-local-ca:
