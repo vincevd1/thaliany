@@ -2,6 +2,13 @@ FROM node:22-slim AS build
 
 COPY client/package.json client/package-lock.json ./
 
+ARG VITE_CLIENT_ID=7xLk3gkoqC4ANdl9r7vAR19sxgEb5EIp5pVBgYfJ
+ARG VITE_CONCREXIT_URI=https://staging.thalia.nu
+ARG VITE_AUTH_PATH=/user/oauth/authorize/
+ARG VITE_TOKEN_PATH=/user/oauth/token/
+ARG VITE_REDIRECT_URI=https://localhost/auth/callback
+ARG VITE_BACKEND_URI=https://localhost
+
 RUN npm install
 
 COPY client .

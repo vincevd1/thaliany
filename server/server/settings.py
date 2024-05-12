@@ -89,10 +89,24 @@ WSGI_APPLICATION = "server.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": (
+        {
+            "ENGINE": "django.db.backends.postgresql",
+            "USER": os.environ.get("POSTGRES_USER"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+            "NAME": os.environ.get(
+                "POSTGRES_DB",
+            ),
+            "HOST": os.environ.get("POSTGRES_HOST"),
+            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+            "CONN_MAX_AGE": 300,
+        }
+        if os.environ.get("POSTGRES_USER")
+        else {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    )
 }
 
 
@@ -140,7 +154,6 @@ STATIC_ROOT = (
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_URL = "/media/"
@@ -155,5 +168,9 @@ MEDIA_ROOT = (
 # https://github.com/johnsensible/django-sendfile#nginx-backend
 SENDFILE_URL = "/media/sendfile/"
 SENDFILE_ROOT = MEDIA_ROOT
-SENDFILE_BACKEND = "sendfile.backends.development"
-# In docker: "sendfile.backends.nginx"
+SENDFILE_BACKEND = (
+    Path(os.environ.get("SENDFILE_BACKEND"))
+    if os.environ.get("SENDFILE_BACKEND")
+    else BASE_DIR / "sendfile.backends.development"
+    # In docker: "sendfile.backends.nginx"
+)

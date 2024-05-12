@@ -2,7 +2,7 @@ FROM python:3.11-alpine AS base
  
 ENV MEDIA_ROOT="/volumes/media" \
     STATIC_ROOT="/volumes/static" \
-    SENDFILE_ROOT="/volumes/media" \
+    SENDFILE_BACKEND="sendfile.backends.nginx" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     TZ=Europe/Amsterdam \
@@ -25,7 +25,7 @@ EXPOSE 8000
 COPY infra/server/entrypoint.sh /app/entrypoint.sh
 
 WORKDIR /app/server
-# CMD can be set to /app/worker-entrypoint.sh for a celery worker container.
+
 CMD [ "/app/entrypoint.sh" ]
 
 RUN adduser --system --uid 5678 appuser
