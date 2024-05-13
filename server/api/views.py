@@ -1,22 +1,14 @@
 import json
-<<<<<<< HEAD
-from django.shortcuts import get_object_or_404
-import requests
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import AnyTimer, AnyTimerRequest, AnytimerStatus , AnyTimerProof
-from django.db.models import Q
-=======
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
 import os
-
 import requests
+
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from sendfile import sendfile
+from django.conf import settings
 
 from .models import AnyTimer, AnyTimerProof, AnyTimerRequest, AnytimerStatus
 
@@ -28,18 +20,15 @@ def give_any(request, target_id):
 
     # Fetch owner user
     res = requests.get(
-        f"https://staging.thalia.nu/api/v2/members/{target_id}",
+        f"{settings.THALIA_BASE_URL}/api/v2/members/{target_id}",
         headers={"Authorization": request.headers["Authorization"]},
     )
 
-<<<<<<< HEAD
-=======
     if target_id == str(request.thalia_user["pk"]):
         return Response(
             data={"message": "You cannot send an anytimer to yourself"}, status=400
         )
 
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
     AnyTimer.objects.create(
         owner_id=target_id,
         recipient_id=request.thalia_user["pk"],
@@ -60,14 +49,10 @@ def request_any(request, target_id):
 
     # Fetch owner user
     res = requests.get(
-        f"https://staging.thalia.nu/api/v2/members/{target_id}",
+        f"{settings.THALIA_BASE_URL}/api/v2/members/{target_id}",
         headers={"Authorization": request.headers["Authorization"]},
     )
 
-<<<<<<< HEAD
-    AnyTimerRequest.objects.create(
-        requester_id=request.thalia_user['pk'],
-=======
     if target_id == str(request.thalia_user["pk"]):
         return Response(
             data={"message": "You cannot request an anytimer from yourself"}, status=400
@@ -75,7 +60,6 @@ def request_any(request, target_id):
 
     AnyTimerRequest.objects.create(
         requester_id=request.thalia_user["pk"],
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
         recipient_id=target_id,
         requester_name=request.thalia_user["profile"]["display_name"],
         recipient_name=res.json()["profile"]["display_name"],
@@ -90,15 +74,9 @@ def request_any(request, target_id):
 def use_anytimer(request, anytimer_id):
     thalia_user = request.thalia_user
     anytimer = AnyTimer.objects.get(owner_id=thalia_user["pk"], id=anytimer_id)
-<<<<<<< HEAD
-    
-    if(anytimer.status == AnytimerStatus.UNUSED):
-        if(anytimer.amount > 1):
-=======
 
     if anytimer.status == AnytimerStatus.UNUSED:
         if anytimer.amount > 1:
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
             # This requires some clarification
             # We first subtract 1 from anytimer and save it
             anytimer.amount -= 1
@@ -124,197 +102,23 @@ def use_anytimer(request, anytimer_id):
 
 @api_view(["POST"])
 def complete_anytimer(request, anytimer_id):
-    image_extensions = [
-        "ase",
-        "art",
-        "bmp",
-        "blp",
-        "cd5",
-        "cit",
-        "cpt",
-        "cr2",
-        "cut",
-        "dds",
-        "dib",
-        "djvu",
-        "egt",
-        "exif",
-        "gif",
-        "gpl",
-        "grf",
-        "icns",
-        "ico",
-        "iff",
-        "jng",
-        "jpeg",
-        "jpg",
-        "jfif",
-        "jp2",
-        "jps",
-        "lbm",
-        "max",
-        "miff",
-        "mng",
-        "msp",
-        "nef",
-        "nitf",
-        "ota",
-        "pbm",
-        "pc1",
-        "pc2",
-        "pc3",
-        "pcf",
-        "pcx",
-        "pdn",
-        "pgm",
-        "PI1",
-        "PI2",
-        "PI3",
-        "pict",
-        "pct",
-        "pnm",
-        "pns",
-        "ppm",
-        "psb",
-        "psd",
-        "pdd",
-        "psp",
-        "px",
-        "pxm",
-        "pxr",
-        "qfx",
-        "raw",
-        "rle",
-        "sct",
-        "sgi",
-        "rgb",
-        "int",
-        "bw",
-        "tga",
-        "tiff",
-        "tif",
-        "vtf",
-        "xbm",
-        "xcf",
-        "xpm",
-        "3dv",
-        "amf",
-        "ai",
-        "awg",
-        "cgm",
-        "cdr",
-        "cmx",
-        "dxf",
-        "e2d",
-        "egt",
-        "eps",
-        "fs",
-        "gbr",
-        "odg",
-        "svg",
-        "stl",
-        "vrml",
-        "x3d",
-        "sxd",
-        "v2d",
-        "vnd",
-        "wmf",
-        "emf",
-        "art",
-        "xar",
-        "png",
-        "webp",
-        "jxr",
-        "hdp",
-        "wdp",
-        "cur",
-        "ecw",
-        "iff",
-        "lbm",
-        "liff",
-        "nrrd",
-        "pam",
-        "pcx",
-        "pgf",
-        "sgi",
-        "rgb",
-        "rgba",
-        "bw",
-        "int",
-        "inta",
-        "sid",
-        "ras",
-        "sun",
-        "tga",
-        "heic",
-        "heif",
-    ]
-    video_extensions = [
-        "webm",
-        "mkv",
-        "flv",
-        "vob",
-        "ogv",
-        "ogg",
-        "rrc",
-        "gifv",
-        "mng",
-        "mov",
-        "avi",
-        "qt",
-        "wmv",
-        "yuv",
-        "rm",
-        "asf",
-        "amv",
-        "mp4",
-        "m4p",
-        "m4v",
-        "mpg",
-        "mp2",
-        "mpeg",
-        "mpe",
-        "mpv",
-        "m4v",
-        "svi",
-        "3gp",
-        "3g2",
-        "mxf",
-        "roq",
-        "nsv",
-        "flv",
-        "f4v",
-        "f4p",
-        "f4a",
-        "f4b",
-        "mod",
-        "quicktime",
-    ]
+    image_extensions = ["jpeg", "jpg", "png", "gif", "webp"]
+    video_extensions = ["avi", "mp4", "mov", "quicktime"]
     max_file_size = 25000000
 
-<<<<<<< HEAD
-    anytimer = AnyTimer.objects.get(recipient_id=request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
-=======
     anytimer = AnyTimer.objects.get(
         recipient_id=request.thalia_user["pk"],
         id=anytimer_id,
         status=AnytimerStatus.USED,
     )
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
 
     if (
         not anytimer
     ):  # Check if there is actually a anytimer and not just a random picture uploaded
         return Response(status=403)
-<<<<<<< HEAD
-    
-    AnyTimerProofExists = AnyTimerProof.objects.filter(anytimer_id = anytimer_id).exists()
-    if(AnyTimerProofExists):
-=======
 
     AnyTimerProofExists = AnyTimerProof.objects.filter(anytimer_id=anytimer_id).exists()
     if AnyTimerProofExists:
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
         return Response(status=403)
 
     proof_type = request.POST.get("proof_type")
@@ -348,18 +152,12 @@ def complete_anytimer(request, anytimer_id):
     else:
         return Response(status=415)
 
-<<<<<<< HEAD
-@api_view(['POST'])
-def accept_anytimer(request ,request_id):
-    anytimerrequest = AnyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
-=======
 
 @api_view(["POST"])
 def accept_anytimer(request, request_id):
     anytimerrequest = AnyTimerRequest.objects.get(
         recipient_id=request.thalia_user["pk"], id=request_id
     )
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
     AnyTimer.objects.create(
         owner_id=anytimerrequest.requester_id,
         recipient_id=anytimerrequest.recipient_id,
@@ -372,43 +170,27 @@ def accept_anytimer(request, request_id):
     anytimerrequest.delete()
     return Response(status=200)
 
-<<<<<<< HEAD
-@api_view(['POST'])
-def deny_anytimer(request,request_id):
-    anytimerrequest = AnyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
-=======
 
 @api_view(["POST"])
 def deny_anytimer(request, request_id):
     anytimerrequest = AnyTimerRequest.objects.get(
         recipient_id=request.thalia_user["pk"], id=request_id
     )
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
     anytimerrequest.delete()
     return Response(status=200)
 
 
 @api_view(["POST"])
 def revoke_request(request, request_id):
-<<<<<<< HEAD
-    anytimerrequest = AnyTimerRequest.objects.get(requester_id=request.thalia_user['pk'], id=request_id)
-=======
     anytimerrequest = AnyTimerRequest.objects.get(
         requester_id=request.thalia_user["pk"], id=request_id
     )
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
     anytimerrequest.delete()
     return Response(status=200)
 
 
 @api_view(["GET"])
 def fetch_requests(request, direction):
-<<<<<<< HEAD
-    if direction == 'incoming':
-        anytimerrequests = AnyTimerRequest.objects.filter(recipient_id=request.thalia_user['pk'])
-    elif direction == 'outgoing':
-        anytimerrequests = AnyTimerRequest.objects.filter(requester_id=request.thalia_user['pk'])
-=======
     if direction == "incoming":
         anytimerrequests = AnyTimerRequest.objects.filter(
             recipient_id=request.thalia_user["pk"]
@@ -417,7 +199,6 @@ def fetch_requests(request, direction):
         anytimerrequests = AnyTimerRequest.objects.filter(
             requester_id=request.thalia_user["pk"]
         )
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
     else:
         return Response(status=400, data={"message": "Invalid direction"})
 
@@ -440,17 +221,10 @@ def fetch_requests(request, direction):
 
 @api_view(["GET"])
 def fetch_anytimers(request, direction):
-<<<<<<< HEAD
-    if direction == 'incoming':
-        anytimers = AnyTimer.objects.filter(recipient_id=request.thalia_user['pk'])
-    elif direction == 'outgoing':
-        anytimers = AnyTimer.objects.filter(owner_id=request.thalia_user['pk'])
-=======
     if direction == "incoming":
         anytimers = AnyTimer.objects.filter(recipient_id=request.thalia_user["pk"])
     elif direction == "outgoing":
         anytimers = AnyTimer.objects.filter(owner_id=request.thalia_user["pk"])
->>>>>>> c46c6d711401959b8661d8053accee89fd1b12f0
     else:
         return Response(status=400, data={"message": "Invalid direction"})
 
