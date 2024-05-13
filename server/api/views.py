@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import anyTimer, anyTimerRequest, AnytimerStatus , AnyTimerProof
+from .models import AnyTimer, AnyTimerRequest, AnytimerStatus , AnyTimerProof
 from django.db.models import Q
 import os
 
@@ -22,7 +22,7 @@ def give_any(request, target_id):
             'message': "You cannot send an anytimer to yourself"
         }, status=400)
 
-    anyTimer.objects.create(
+    AnyTimer.objects.create(
         owner_id=target_id,
         recipient_id=request.thalia_user['pk'],
         owner_name=res.json()['profile']['display_name'],
@@ -49,7 +49,7 @@ def request_any(request, target_id):
             'message': "You cannot request an anytimer from yourself"
         }, status=400)
 
-    anyTimerRequest.objects.create(
+    AnyTimerRequest.objects.create(
         requester_id=request.thalia_user['pk'],
         recipient_id=target_id,
         requester_name=request.thalia_user['profile']['display_name'],
@@ -63,7 +63,7 @@ def request_any(request, target_id):
 @api_view(['POST'])
 def use_anytimer(request, anytimer_id):
     thalia_user = request.thalia_user
-    anytimer = anyTimer.objects.get(owner_id=thalia_user["pk"], id=anytimer_id)
+    anytimer = AnyTimer.objects.get(owner_id=thalia_user["pk"], id=anytimer_id)
     
     if(anytimer.status == AnytimerStatus.UNUSED):
         if(anytimer.amount > 1):
@@ -95,13 +95,13 @@ def complete_anytimer(request, anytimer_id):
     video_extensions = ["webm", "mkv", "flv", "vob", "ogv", "ogg", "rrc", "gifv", "mng", "mov", "avi", "qt", "wmv", "yuv", "rm", "asf", "amv", "mp4", "m4p", "m4v", "mpg", "mp2", "mpeg", "mpe", "mpv", "m4v", "svi", "3gp", "3g2", "mxf", "roq", "nsv", "flv", "f4v", "f4p", "f4a", "f4b", "mod", "quicktime"]
     max_file_size = 25000000
 
-    anytimer = anyTimer.objects.get(recipient_id=request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
+    anytimer = AnyTimer.objects.get(recipient_id=request.thalia_user['pk'], id=anytimer_id, status=AnytimerStatus.USED)
 
     if (not anytimer): #Check if there is actually a anytimer and not just a random picture uploaded
         return Response(status=403)
     
-    anyTimerProofExists = AnyTimerProof.objects.filter(anytimer_id = anytimer_id).exists()
-    if(anyTimerProofExists):
+    AnyTimerProofExists = AnyTimerProof.objects.filter(anytimer_id = anytimer_id).exists()
+    if(AnyTimerProofExists):
         return Response(status=403)
     
     proof_type = request.POST.get("proof_type")
@@ -142,8 +142,8 @@ def complete_anytimer(request, anytimer_id):
 
 @api_view(['POST'])
 def accept_anytimer(request ,request_id):
-    anytimerrequest = anyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
-    anyTimer.objects.create(
+    anytimerrequest = AnyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
+    AnyTimer.objects.create(
         owner_id=anytimerrequest.requester_id,
         recipient_id=anytimerrequest.recipient_id,
         owner_name=anytimerrequest.requester_name,
@@ -157,22 +157,22 @@ def accept_anytimer(request ,request_id):
 
 @api_view(['POST'])
 def deny_anytimer(request,request_id):
-    anytimerrequest = anyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
+    anytimerrequest = AnyTimerRequest.objects.get(recipient_id=request.thalia_user['pk'], id=request_id)
     anytimerrequest.delete()
     return Response(status=200)
 
 @api_view(['POST'])
 def revoke_request(request, request_id):
-    anytimerrequest = anyTimerRequest.objects.get(requester_id=request.thalia_user['pk'], id=request_id)
+    anytimerrequest = AnyTimerRequest.objects.get(requester_id=request.thalia_user['pk'], id=request_id)
     anytimerrequest.delete()
     return Response(status=200)
 
 @api_view(['GET'])
 def fetch_requests(request, direction):
     if direction == 'incoming':
-        anytimerrequests = anyTimerRequest.objects.filter(recipient_id=request.thalia_user['pk'])
+        anytimerrequests = AnyTimerRequest.objects.filter(recipient_id=request.thalia_user['pk'])
     elif direction == 'outgoing':
-        anytimerrequests = anyTimerRequest.objects.filter(requester_id=request.thalia_user['pk'])
+        anytimerrequests = AnyTimerRequest.objects.filter(requester_id=request.thalia_user['pk'])
     else:
         return Response(status=400, data={'message': 'Invalid direction'})
 
@@ -195,9 +195,9 @@ def fetch_requests(request, direction):
 @api_view(['GET'])
 def fetch_anytimers(request, direction):
     if direction == 'incoming':
-        anytimers = anyTimer.objects.filter(recipient_id=request.thalia_user['pk'])
+        anytimers = AnyTimer.objects.filter(recipient_id=request.thalia_user['pk'])
     elif direction == 'outgoing':
-        anytimers = anyTimer.objects.filter(owner_id=request.thalia_user['pk'])
+        anytimers = AnyTimer.objects.filter(owner_id=request.thalia_user['pk'])
     else:
         return Response(status=400, data={'message': 'Invalid direction'})
 
