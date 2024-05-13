@@ -5,16 +5,19 @@ class _User {
     private isLoggedIn: boolean | null;
     private access_token: string | null;
     private refresh_token: string | null;
+    private id_token: string | null;
     private expires: number | null;
 
     constructor(
         access_token: string | null,
         refresh_token: string | null,
+        id_token: string | null,
         expires: string | null
     ) {
         this.isLoggedIn = false;
         this.access_token = access_token;
         this.refresh_token = refresh_token;
+        this.id_token = id_token;
 
         if(expires) {
             this.expires = parseInt(expires);
@@ -85,6 +88,11 @@ class _User {
         this.refresh_token = refresh_token;
     }
 
+    set setIdToken(id_token: string) {
+        localStorage.setItem('id_token', id_token)
+        this.id_token = id_token;
+    }
+
     set setExpiration(expires: number) {
         localStorage.setItem('expires', expires.toString())
         this.expires = expires
@@ -94,6 +102,7 @@ class _User {
 const User = new _User(
     localStorage.getItem('access_token'), 
     localStorage.getItem('refresh_token'), 
+    localStorage.getItem('id_token'), 
     localStorage.getItem('expires')
 );
 

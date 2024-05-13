@@ -12,12 +12,12 @@ export default function AuthCallback() {
             <div>An error has occured while trying to authenticate, please try again.</div>
         )
     } else if(params.get('code') && !User.getIsLoggedIn) {
-
         useEffect(() => {
             async function Authenticate() {
-                const credentials: Credentials = await APIService.getCredentialsFromCode(params.get('code') as string)
+                const credentials: Credentials = await APIService.getCredentialsFromCode(params.get('code')!)
         
                 User.setAccessToken = credentials.access_token;
+                User.setIdToken = credentials.id_token;
                 User.setRefreshToken = credentials.refresh_token;
                 User.setExpiration = Date.now() + credentials.expires_in * 1000;
     

@@ -14,7 +14,6 @@ class _APIService {
     token_path: string;
     client_id: string;
     redirect_uri: string;
-    code_challenge: string;
 
     constructor(
         backend_uri: string,
@@ -23,7 +22,6 @@ class _APIService {
         token_path: string,
         client_id: string,
         redirect_uri: string,
-        code_challenge: string | null
     ) {
         this.backend_uri = backend_uri;
         this.concrexit_uri = concrexit_uri;
@@ -31,7 +29,6 @@ class _APIService {
         this.token_path = token_path;
         this.client_id = client_id;
         this.redirect_uri = redirect_uri;
-        this.code_challenge = code_challenge || "";
     }
 
     generateAuthLink(): string {
@@ -42,17 +39,17 @@ class _APIService {
         const values = new Uint32Array(48);
         window.crypto.getRandomValues(values);
         
-        this.code_challenge = '';
+        let code_challenge = '';
         for (let i = 0; i < 48; i++) {
-            this.code_challenge += charset[values[i] % charset.length];
+            code_challenge += charset[values[i] % charset.length];
         }
-        localStorage.setItem('code_challenge', this.code_challenge)
+        localStorage.setItem('code_challenge', code_challenge)
 
         authLink.searchParams.append('client_id', this.client_id);
-        authLink.searchParams.append('scope', 'profile:read members:read');
+        authLink.searchParams.append('scope', 'openid profile:read members:read');
         authLink.searchParams.append('redirect_uri', this.redirect_uri);
         authLink.searchParams.append('response_type', 'code');
-        authLink.searchParams.append('code_challenge', this.code_challenge)
+        authLink.searchParams.append('code_challenge', code_challenge)
         authLink.searchParams.append('code_challenge_method', 'plain')
 
         return authLink.toString();
@@ -61,19 +58,26 @@ class _APIService {
     getCredentialsFromCode(code: string): Promise<Credentials> {
         return new Promise((resolve, reject) => {
             const form: FormData = new FormData();
-            form.append('grant_type', 'authorization_code')
-            form.append('client_id', this.client_id)
-            form.append('code', code)
-            form.append('code_verifier', this.code_challenge)
-            form.append('redirect_uri', this.redirect_uri)
-    
-            axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
-                .then(res => {
-                    resolve(res.data)
-                })
-                .catch(err => {
-                    reject(err)
-                })
+            const code_challenge = localStorage.getItem('code_challenge');
+
+            if(code_challenge) {
+                form.append('grant_type', 'authorization_code')
+                form.append('client_id', this.client_id)
+                form.append('code', code)
+                form.append('code_verifier', code_challenge)
+                form.append('redirect_uri', this.redirect_uri)
+        
+                axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
+                    .then(res => {
+                        localStorage.removeItem('code_challenge')
+                        resolve(res.data)
+                    })
+                    .catch(err => {
+                        reject(err)
+                    })
+            } else {
+                reject("Code challenge not found in local storage!")
+            }
         })
     }
 
@@ -136,7 +140,6 @@ const APIService = new _APIService(
     import.meta.env.VITE_TOKEN_PATH,
     import.meta.env.VITE_CLIENT_ID,
     import.meta.env.VITE_REDIRECT_URI,
-    localStorage.getItem('code_challenge')
 )
 
 export {
