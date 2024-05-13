@@ -7,19 +7,18 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='anyTimer',
+            name="AnyTimer",
             fields=[
-                ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('owner_id', models.IntegerField()),
-                ('receipient_id', models.IntegerField()),
-                ('amount', models.IntegerField()),
-                ('type', models.CharField(max_length=500)),
-                ('description', models.CharField(max_length=500)),
+                ("id", models.BigAutoField(primary_key=True, serialize=False)),
+                ("owner_id", models.IntegerField()),
+                ("receipient_id", models.IntegerField()),
+                ("amount", models.IntegerField()),
+                ("type", models.CharField(max_length=500)),
+                ("description", models.CharField(max_length=500)),
             ],
         ),
     ]

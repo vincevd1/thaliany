@@ -34,3 +34,6 @@ db.sqlite3
 
 #image proofs
 server/static
+
+.venv
+server/media

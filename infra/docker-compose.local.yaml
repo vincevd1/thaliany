@@ -1,0 +1,45 @@
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: infra/server/Dockerfile
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: thaliany
+      POSTGRES_USER: thaliany
+      POSTGRES_PASSWORD: thaliany
+    volumes:
+      - media:/volumes/media:rw
+      - static:/volumes/static:rw
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: infra/nginx/Dockerfile
+    environment:
+      # See https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v4.3.0/docs/advanced_usage.md#local-ca
+      USE_LOCAL_CA: 1
+      CERTBOT_EMAIL: vvandiermen+thaliany@members.thalia.nu
+      SITE_DOMAIN: localhost
+    volumes:
+      - nginx-local-ca:/etc/local_ca:rw
+      - media:/volumes/media:ro
+      - static:/volumes/static:ro
+    ports:
+      - 80:80
+      - 443:443
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: thaliany
+      POSTGRES_USER: thaliany
+      POSTGRES_PASSWORD: thaliany
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  nginx-local-ca:
+  postgres-data:
+  media:
+  static:

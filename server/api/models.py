@@ -1,9 +1,11 @@
 from django.db import models
 
+
 class AnytimerStatus(models.TextChoices):
     UNUSED = "unused"
     USED = "used"
     COMPLETED = "completed"
+
 
 class AnyTimer(models.Model):
     owner_id = models.IntegerField()
@@ -23,6 +25,7 @@ class AnyTimerRequest(models.Model):
     amount = models.IntegerField()
     type = models.CharField(max_length=500)
     description = models.CharField(max_length=500, blank=True, null=True)
+
 
 class AnyTimerProof(models.Model):
     anytimer = models.OneToOneField(AnyTimer, on_delete=models.CASCADE)
