@@ -3,6 +3,7 @@ services:
     image: ghcr.io/vincevd1/thaliany-server:${TAG:-latest}
     environment:
       SECRET_KEY: ${SECRET_KEY:?Secret key must be set}
+      SENTRY_DSN: ${SENTRY_DSN}
       POSTGRES_HOST: postgres
       POSTGRES_DB: thaliany
       POSTGRES_USER: thaliany
