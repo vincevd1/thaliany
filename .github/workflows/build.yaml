@@ -84,7 +84,7 @@ jobs:
         uses: docker/build-push-action@v5.1.0
         with:
           context: ./
-          dockerfile: ./infra/nginx/Dockerfile
+          file: ./infra/nginx/Dockerfile
           push: true
           build-args: |
             ARG VITE_CLIENT_ID=${{ secrets.CONCREXIT_CLIENT_ID }}
