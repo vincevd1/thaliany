@@ -1,14 +1,14 @@
 import json
 import os
-import requests
 
+import requests
+from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.urls import  reverse
+from django.urls import reverse
+from django_sendfile import sendfile
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from sendfile import sendfile
-from django.conf import settings
 
 from .models import AnyTimer, AnyTimerProof, AnyTimerRequest, AnytimerStatus
 
@@ -24,7 +24,7 @@ def give_any(request, target_id):
         headers={"Authorization": request.headers["Authorization"]},
     )
 
-    #Fetch recipient user
+    # Fetch recipient user
     recipient = requests.get(
         f"{settings.THALIA_BASE_URL}/api/v2/members/{request.user_id}",
         headers={"Authorization": request.headers["Authorization"]},
@@ -203,13 +203,9 @@ def revoke_request(request, request_id):
 @api_view(["GET"])
 def fetch_requests(request, direction):
     if direction == "incoming":
-        anytimerrequests = AnyTimerRequest.objects.filter(
-            recipient_id=request.user_id
-        )
+        anytimerrequests = AnyTimerRequest.objects.filter(recipient_id=request.user_id)
     elif direction == "outgoing":
-        anytimerrequests = AnyTimerRequest.objects.filter(
-            requester_id=request.user_id
-        )
+        anytimerrequests = AnyTimerRequest.objects.filter(requester_id=request.user_id)
     else:
         return Response(status=400, data={"message": "Invalid direction"})
 
@@ -270,8 +266,7 @@ def fetch_proof(request, anytimer_id):
     data = {
         "anytimer_id": proof.anytimer_id,
         "proof_file": request.build_absolute_uri(
-            settings.BASE_URL + 
-            reverse("proof_sendfile", args=[anytimer_id])
+            settings.BASE_URL + reverse("proof_sendfile", args=[anytimer_id])
         ),
         "description": proof.description,
         "proof_type": proof.proof_type,
@@ -290,6 +285,6 @@ def proof_sendfile(request, anytimer_id):
         ),
         anytimer=anytimer_id,
     )
-    
+
     print(proof.file.path)
     return sendfile(request, proof.file.path)
