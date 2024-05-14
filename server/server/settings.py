@@ -74,6 +74,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 ALLOWED_HOSTS = ["localhost", "localhost:5173"] if DEBUG else [SITE_DOMAIN]
+CSRF_TRUSTED_ORIGIN = [BASE_URL]
 
 ROOT_URLCONF = "server.urls"
 
@@ -191,28 +192,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Base url for thalia requests
 THALIA_BASE_URL = os.environ.get("THALIA_BASE_URL", "https://staging.thalia.nu")
 
-# Client id
-CLIENT_ID = "7xLk3gkoqC4ANdl9r7vAR19sxgEb5EIp5pVBgYfJ"
+CLIENT_ID = os.environ.get("CLIENT_ID") or "7xLk3gkoqC4ANdl9r7vAR19sxgEb5EIp5pVBgYfJ"
 
-# Staging public key
+# Concrexit's OIDC public key.
 RSA_PUB_KEY = (
     b"""-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtb7GpVAek7o3w402eATz
-UnywUFtMPoZWvZUmdOq70jiwB5LMT5jbkxwdHYd/+jLNw0dDiAM4HapAWzwB0+QC
-ic3t5/vhG7tWb7PuZMzanQNfA5Fwit7A/Bf+/ghhA01Wrl2BpGiEsr0paKBe/Hzy
-wN1UU6TnptoXi90S6HYLEyfu7iOXfLwLLtOHdxMHE5f5BEh1tYr7DrZyZ9SwBYG7
-O0MqeRcohZfiL9k8FoVY/FhXR5qm3IBAtHswA2kYRqa97lyspc52vlp41Ck2YU5i
-od9xPqAVis4eVfVryggSMT5in/Kwocf/Xh6xWX0SXR45dnfam/01XGRN8HcerNwg
-S7531o/cDdyhoTPiEUrxZCUr72ZWoJoEqWb+pgaGYaS8ORr14kLRpkzzwEZ7qQQJ
-dzX0L0+rkedYaKScYM1+gDDXN6a3vpYTVTUMNcOYQvRZolxIr7cwZq3PXcfrmdPF
-pDE3fY5mBnjwTi0oWMQpaq2lGQbQ8itMyx4fS5cx2zMho87sjffgg77O0TAxPnco
-l8mHpetjiE8RaCS119Wlti7FGt6MxSd5HzxwmHlpFhqDvq4gLJ5YUle+yP8fSucp
-yJqu+n/NszOKb56O1ZycAN6Ezmt7YzNKAc3PvcFLN4AY/JJgilMQjJ/D4QFCC2t+
-bGYS9RZ75FnbQ39FSzJbWfcCAwEAAQ==
------END PUBLIC KEY-----
-"""
-    if DEBUG
-    else b"""-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxQEr+vEGdrRV/4SXhEIP
 FYoJ+1FfYBPJ9WzOfqwrChYQH3BgmMlxvx70CcwvwtiRST2cKRY3+6Zb6TBIoupr
 QrdJnCoAArNxgESjwaJqNca+Z7pc+NdC1RFidmtduPpXFpr4mCH+pQxL/Us8P7Wm
@@ -226,5 +210,21 @@ SkyyxHgIxBF3YP6bTX3oTnM/WJfbxcfY9iYZBghIMHKhe8+jrKt553+R/wqSRYM4
 46vV+2YnX/ppcxTqVc+7dU0qEjrMh5PQs7DkxCtFcl3vloqXkZiq7fec8iPLY2EI
 Xq+CXcRoZJka01034Ob+NRsCAwEAAQ==
 -----END PUBLIC KEY-----
-"""
+"""  # Production public key
+    if THALIA_BASE_URL == "https://thalia.nu"
+    else b"""-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtb7GpVAek7o3w402eATz
+UnywUFtMPoZWvZUmdOq70jiwB5LMT5jbkxwdHYd/+jLNw0dDiAM4HapAWzwB0+QC
+ic3t5/vhG7tWb7PuZMzanQNfA5Fwit7A/Bf+/ghhA01Wrl2BpGiEsr0paKBe/Hzy
+wN1UU6TnptoXi90S6HYLEyfu7iOXfLwLLtOHdxMHE5f5BEh1tYr7DrZyZ9SwBYG7
+O0MqeRcohZfiL9k8FoVY/FhXR5qm3IBAtHswA2kYRqa97lyspc52vlp41Ck2YU5i
+od9xPqAVis4eVfVryggSMT5in/Kwocf/Xh6xWX0SXR45dnfam/01XGRN8HcerNwg
+S7531o/cDdyhoTPiEUrxZCUr72ZWoJoEqWb+pgaGYaS8ORr14kLRpkzzwEZ7qQQJ
+dzX0L0+rkedYaKScYM1+gDDXN6a3vpYTVTUMNcOYQvRZolxIr7cwZq3PXcfrmdPF
+pDE3fY5mBnjwTi0oWMQpaq2lGQbQ8itMyx4fS5cx2zMho87sjffgg77O0TAxPnco
+l8mHpetjiE8RaCS119Wlti7FGt6MxSd5HzxwmHlpFhqDvq4gLJ5YUle+yP8fSucp
+yJqu+n/NszOKb56O1ZycAN6Ezmt7YzNKAc3PvcFLN4AY/JJgilMQjJ/D4QFCC2t+
+bGYS9RZ75FnbQ39FSzJbWfcCAwEAAQ==
+-----END PUBLIC KEY-----
+"""  # Staging public key
 )
