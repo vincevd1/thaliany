@@ -87,7 +87,7 @@ jobs:
           file: ./infra/nginx/Dockerfile
           push: true
           build-args: |
-            VITE_CLIENT_ID=${{ secrets.CONCREXIT_CLIENT_ID }}
+            VITE_CLIENT_ID=${{ secrets.CLIENT_ID }}
             VITE_CONCREXIT_URI=https://thalia.nu
             VITE_REDIRECT_URI=https://any.thalia.nu/auth/callback
             VITE_BACKEND_URI=https://any.thalia.nu
