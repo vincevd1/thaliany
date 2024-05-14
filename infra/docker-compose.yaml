@@ -1,30 +1,26 @@
 services:
   server:
-    build:
-      context: ..
-      dockerfile: infra/server/Dockerfile
+    image: ghcr.io/vincevd1/thaliany-server:${TAG:-latest}
     environment:
+      SECRET_KEY: ${SECRET_KEY:?Secret key must be set}
       POSTGRES_HOST: postgres
       POSTGRES_DB: thaliany
       POSTGRES_USER: thaliany
       POSTGRES_PASSWORD: thaliany
-      SITE_DOMAIN: localhost
-      BASE_URL: https://localhost
+      SITE_DOMAIN: any.thalia.nu
+      BASE_URL: https://any.thalia.nu
+      DEBUG: 0
     volumes:
       - media:/volumes/media:rw
       - static:/volumes/static:rw
 
   nginx:
-    build:
-      context: ..
-      dockerfile: infra/nginx/Dockerfile
+    image: ghcr.io/vincevd1/thaliany-nginx:${TAG:-latest}
     environment:
-      # See https://github.com/JonasAlfredsson/docker-nginx-certbot/blob/v4.3.0/docs/advanced_usage.md#local-ca
-      USE_LOCAL_CA: 1
       CERTBOT_EMAIL: vvandiermen+thaliany@members.thalia.nu
-      SITE_DOMAIN: localhost
+      SITE_DOMAIN: any.thalia.nu
     volumes:
-      - nginx-local-ca:/etc/local_ca:rw
+      - letsencrypt:/etc/letsencrypt:rw
       - media:/volumes/media:ro
       - static:/volumes/static:ro
     ports:
@@ -41,7 +37,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  nginx-local-ca:
+  letsencrypt:
   postgres-data:
   media:
   static:
