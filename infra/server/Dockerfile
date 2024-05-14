@@ -2,7 +2,7 @@ FROM python:3.11-alpine AS base
  
 ENV MEDIA_ROOT="/volumes/media" \
     STATIC_ROOT="/volumes/static" \
-    SENDFILE_BACKEND="sendfile.backends.nginx" \
+    SENDFILE_BACKEND="django_sendfile.backends.nginx" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     TZ=Europe/Amsterdam \

@@ -183,8 +183,8 @@ SENDFILE_ROOT = MEDIA_ROOT
 SENDFILE_BACKEND = (
     os.environ.get("SENDFILE_BACKEND")
     if os.environ.get("SENDFILE_BACKEND")
-    else "sendfile.backends.development"
-    # In docker: "sendfile.backends.nginx"
+    else "django_sendfile.backends.development"
+    # In docker: "django_sendfile.backends.nginx"
 )
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
