@@ -178,7 +178,7 @@ SENDFILE_BACKEND = (
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Base url for thalia requests
-THALIA_BASE_URL = "https://staging.thalia.nu"
+THALIA_BASE_URL = os.environ.get("THALIA_BASE_URL", "https://staging.thalia.nu")
 
 # Client id
 CLIENT_ID = "7xLk3gkoqC4ANdl9r7vAR19sxgEb5EIp5pVBgYfJ"

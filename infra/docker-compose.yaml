@@ -9,6 +9,7 @@ services:
       POSTGRES_PASSWORD: thaliany
       SITE_DOMAIN: any.thalia.nu
       BASE_URL: https://any.thalia.nu
+      THALIA_BASE_URL: https://thalia.nu
       DEBUG: 0
     volumes:
       - media:/volumes/media:rw
