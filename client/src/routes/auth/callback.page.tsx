@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import Credentials from '../../models/credentials.model';
 import User from '../../modules/user.module';
 import { APIService } from '../../services/api.service'
+import Loading from '../../components/loading.component';
+import "./callback.page.css"
 
 export default function AuthCallback() {
     const url = new URL(window.location.href);
@@ -13,9 +15,7 @@ export default function AuthCallback() {
         )
     } else if(params.get('code') && !User.getIsLoggedIn) {
         useEffect(() => {
-            async function Authenticate() {
-                const credentials: Credentials = await APIService.getCredentialsFromCode(params.get('code')!)
-        
+            APIService.getCredentialsFromCode(params.get('code')!).then((credentials: Credentials) => {
                 User.setAccessToken = credentials.access_token;
                 User.setIdToken = credentials.id_token;
                 User.setRefreshToken = credentials.refresh_token;
@@ -23,13 +23,14 @@ export default function AuthCallback() {
     
                 localStorage.removeItem('code_challenge');
                 window.location.href = '/'
-            }
-
-            Authenticate();
+            })
         })
 
         return(
-            <div>Authenticating... please wait</div>
+            <>
+                <h2 className="auth-header">Authenticating, please wait</h2>
+                <Loading />
+            </>
         )
     } else {
         window.location.href = '/'

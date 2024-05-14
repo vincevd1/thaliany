@@ -1,0 +1,13 @@
+.privacy-policy {
+    margin-top: 1em;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    gap: 1em;
+}
+
+.data-list {
+    margin-inline-start: 3em;
+}

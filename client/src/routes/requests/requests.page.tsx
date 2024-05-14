@@ -9,7 +9,6 @@ export default function Requests() {
 
     useEffect(() => {
         if(!User.getIsLoggedIn) {
-            console.log("test")
             navigate("/")
         }
     }, [])

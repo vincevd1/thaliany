@@ -8,6 +8,7 @@ import APIError from './routes/api/error.page.tsx'
 import Members from './routes/members/members.page.tsx'
 import Requests from './routes/requests/requests.page.tsx'
 import Proofs from './routes/proofs/proofs.page.tsx'
+import PolicyPage from './routes/policy.page.tsx'
 
 const router = createBrowserRouter([
 	{
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
 			{
 				path: '/',
 				element: <Overview />
+				
 			},
 			{
 				path: '/members',
@@ -30,6 +32,10 @@ const router = createBrowserRouter([
 			{
 				path: '/proofs',
 				element: <Proofs />
+			},
+			{
+				path: '/privacy-policy',
+				element: <PolicyPage />
 			},
 			{
 				path: '/api/error',

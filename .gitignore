@@ -37,3 +37,5 @@ server/static
 
 .venv
 server/media
+
+django-env

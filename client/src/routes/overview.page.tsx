@@ -7,6 +7,9 @@ import AnyTimerList from "../components/anytimerlist.component";
 import Loading from "../components/loading.component";
 import { useNotification } from "../components/notification.component";
 
+import { FaGithub } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
 export default function Overview() {
     const [avatar, setAvatar] = useState('');
     const [displayName, setDisplayName] = useState('');
@@ -55,6 +58,20 @@ export default function Overview() {
                 <AnyTimerList list_type='confirmed' direction='outgoing' state="unused"/>
                 <h2>ANYTIMERS ON YOU</h2>
                 <AnyTimerList list_type='confirmed' direction='incoming' state="unused"/>
+
+                <footer>
+                    <a className="icon-link" href="https://github.com/vincevd1/thaliany">
+                        <FaGithub size={"1.25em"}/>
+                    </a>
+
+                    <a className="icon-link" href="mailto:thaliany@thalia.nu">
+                        <MdEmail size={"1.5em"}/>
+                    </a>
+
+                    <a href="/privacy-policy">
+                        Privacy Policy
+                    </a>
+                </footer>
             </>
         )
     } else {

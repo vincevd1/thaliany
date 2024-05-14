@@ -56,3 +56,22 @@
     align-items: center;
     gap: 0.5em;
 }
+
+.icon-link {
+    display: flex;
+    align-items: center;
+}
+
+footer {
+    display: flex;
+
+    width: 100%;
+    height: 5em;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.25em;
+
+    gap: 1em;
+}

@@ -105,7 +105,7 @@ class _APIService {
     
             axios.get(`${base_uri}${path}`, {
                 headers: {
-                    'Authorization': `Bearer ${User.getAccessToken}`
+                    'Authorization': `Bearer ${User.getAccessToken}`,
                 }
             }).then(res => {
                 resolve(res.data);
@@ -122,8 +122,8 @@ class _APIService {
 
             axios.post(`${base_uri}${path}`, data, {
                 headers: {
-                    'Authorization': `Bearer ${User.getAccessToken}`
-                }
+                    'Authorization': `Bearer ${User.getAccessToken}`,
+                },
             }).then(res => {
                 resolve(res.data)
             }).catch(err => {
