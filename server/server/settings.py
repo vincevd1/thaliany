@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", "1"))
+DEBUG = os.environ.get("DEBUG", "1") == "1"
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
