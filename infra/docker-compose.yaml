@@ -17,7 +17,7 @@ services:
   nginx:
     image: ghcr.io/vincevd1/thaliany-nginx:${TAG:-latest}
     environment:
-      CERTBOT_EMAIL: vvandiermen+thaliany@members.thalia.nu
+      CERTBOT_EMAIL: thaliany@thalia.nu
       SITE_DOMAIN: any.thalia.nu
     volumes:
       - letsencrypt:/etc/letsencrypt:rw
