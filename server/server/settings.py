@@ -16,6 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Base url
+BASE_URL = "http://127.0.0.1"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -26,8 +28,7 @@ SECRET_KEY = "django-insecure-gnv#q+ybobfpcyrx461ffdb==692qn(23o7eqwp-vhhv$s#%kn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.2.18", "localhost"]
-
+ALLOWED_HOSTS = ["192.168.2.18", "localhost", "localhost:5173"]
 
 # Application definition
 
@@ -56,13 +57,12 @@ MIDDLEWARE = [
     "server.middleware.thaliamiddleware.ThaliaMiddleware",
 ]
 
-# CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://192.168.2.18:5173",
     "http://192.168.2.18:4173",
 ]
+CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 ROOT_URLCONF = "server.urls"
 
@@ -169,9 +169,9 @@ MEDIA_ROOT = (
 SENDFILE_URL = "/media/sendfile/"
 SENDFILE_ROOT = MEDIA_ROOT
 SENDFILE_BACKEND = (
-    Path(os.environ.get("SENDFILE_BACKEND"))
+    os.environ.get("SENDFILE_BACKEND")
     if os.environ.get("SENDFILE_BACKEND")
-    else BASE_DIR / "sendfile.backends.development"
+    else "sendfile.backends.development"
     # In docker: "sendfile.backends.nginx"
 )
 
@@ -179,3 +179,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Base url for thalia requests
 THALIA_BASE_URL = "https://staging.thalia.nu"
+
+# Client id
+CLIENT_ID = "7xLk3gkoqC4ANdl9r7vAR19sxgEb5EIp5pVBgYfJ"
+
+# Staging public key
+RSA_PUB_KEY = b"-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtb7GpVAek7o3w402eATzUnywUFtMPoZWvZUmdOq70jiwB5LMT5jbkxwdHYd/+jLNw0dDiAM4HapAWzwB0+QCic3t5/vhG7tWb7PuZMzanQNfA5Fwit7A/Bf+/ghhA01Wrl2BpGiEsr0paKBe/HzywN1UU6TnptoXi90S6HYLEyfu7iOXfLwLLtOHdxMHE5f5BEh1tYr7DrZyZ9SwBYG7O0MqeRcohZfiL9k8FoVY/FhXR5qm3IBAtHswA2kYRqa97lyspc52vlp41Ck2YU5iod9xPqAVis4eVfVryggSMT5in/Kwocf/Xh6xWX0SXR45dnfam/01XGRN8HcerNwgS7531o/cDdyhoTPiEUrxZCUr72ZWoJoEqWb+pgaGYaS8ORr14kLRpkzzwEZ7qQQJdzX0L0+rkedYaKScYM1+gDDXN6a3vpYTVTUMNcOYQvRZolxIr7cwZq3PXcfrmdPFpDE3fY5mBnjwTi0oWMQpaq2lGQbQ8itMyx4fS5cx2zMho87sjffgg77O0TAxPncol8mHpetjiE8RaCS119Wlti7FGt6MxSd5HzxwmHlpFhqDvq4gLJ5YUle+yP8fSucpyJqu+n/NszOKb56O1ZycAN6Ezmt7YzNKAc3PvcFLN4AY/JJgilMQjJ/D4QFCC2t+bGYS9RZ75FnbQ39FSzJbWfcCAwEAAQ==\n-----END PUBLIC KEY-----"

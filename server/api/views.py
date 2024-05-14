@@ -4,7 +4,7 @@ import requests
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from django.urls import  reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from sendfile import sendfile
@@ -19,21 +19,27 @@ def give_any(request, target_id):
     body = json.loads(body_unicode)
 
     # Fetch owner user
-    res = requests.get(
+    owner = requests.get(
         f"{settings.THALIA_BASE_URL}/api/v2/members/{target_id}",
         headers={"Authorization": request.headers["Authorization"]},
     )
 
-    if target_id == str(request.thalia_user["pk"]):
+    #Fetch recipient user
+    recipient = requests.get(
+        f"{settings.THALIA_BASE_URL}/api/v2/members/{request.user_id}",
+        headers={"Authorization": request.headers["Authorization"]},
+    )
+
+    if target_id == str(request.user_id):
         return Response(
             data={"message": "You cannot send an anytimer to yourself"}, status=400
         )
 
     AnyTimer.objects.create(
         owner_id=target_id,
-        recipient_id=request.thalia_user["pk"],
-        owner_name=res.json()["profile"]["display_name"],
-        recipient_name=request.thalia_user["profile"]["display_name"],
+        recipient_id=request.user_id,
+        owner_name=owner.json()["profile"]["display_name"],
+        recipient_name=recipient.json()["profile"]["display_name"],
         amount=body["amount"],
         type=body["type"],
         description=body["description"],
@@ -47,22 +53,28 @@ def request_any(request, target_id):
     body_unicode = request.body.decode("utf-8")
     body = json.loads(body_unicode)
 
-    # Fetch owner user
-    res = requests.get(
+    # Fetch recipient user
+    recipient = requests.get(
         f"{settings.THALIA_BASE_URL}/api/v2/members/{target_id}",
         headers={"Authorization": request.headers["Authorization"]},
     )
 
-    if target_id == str(request.thalia_user["pk"]):
+    # Fetch requester user
+    requester = requests.get(
+        f"{settings.THALIA_BASE_URL}/api/v2/members/{request.user_id}",
+        headers={"Authorization": request.headers["Authorization"]},
+    )
+
+    if target_id == str(request.user_id):
         return Response(
             data={"message": "You cannot request an anytimer from yourself"}, status=400
         )
 
     AnyTimerRequest.objects.create(
-        requester_id=request.thalia_user["pk"],
+        requester_id=request.user_id,
         recipient_id=target_id,
-        requester_name=request.thalia_user["profile"]["display_name"],
-        recipient_name=res.json()["profile"]["display_name"],
+        requester_name=requester.json()["profile"]["display_name"],
+        recipient_name=recipient.json()["profile"]["display_name"],
         amount=body["amount"],
         type=body["type"],
         description=body["description"],
@@ -72,8 +84,7 @@ def request_any(request, target_id):
 
 @api_view(["POST"])
 def use_anytimer(request, anytimer_id):
-    thalia_user = request.thalia_user
-    anytimer = AnyTimer.objects.get(owner_id=thalia_user["pk"], id=anytimer_id)
+    anytimer = AnyTimer.objects.get(owner_id=request.user_id, id=anytimer_id)
 
     if anytimer.status == AnytimerStatus.UNUSED:
         if anytimer.amount > 1:
@@ -107,7 +118,7 @@ def complete_anytimer(request, anytimer_id):
     max_file_size = 25000000
 
     anytimer = AnyTimer.objects.get(
-        recipient_id=request.thalia_user["pk"],
+        recipient_id=request.user_id,
         id=anytimer_id,
         status=AnytimerStatus.USED,
     )
@@ -156,7 +167,7 @@ def complete_anytimer(request, anytimer_id):
 @api_view(["POST"])
 def accept_anytimer(request, request_id):
     anytimerrequest = AnyTimerRequest.objects.get(
-        recipient_id=request.thalia_user["pk"], id=request_id
+        recipient_id=request.user_id, id=request_id
     )
     AnyTimer.objects.create(
         owner_id=anytimerrequest.requester_id,
@@ -174,7 +185,7 @@ def accept_anytimer(request, request_id):
 @api_view(["POST"])
 def deny_anytimer(request, request_id):
     anytimerrequest = AnyTimerRequest.objects.get(
-        recipient_id=request.thalia_user["pk"], id=request_id
+        recipient_id=request.user_id, id=request_id
     )
     anytimerrequest.delete()
     return Response(status=200)
@@ -183,7 +194,7 @@ def deny_anytimer(request, request_id):
 @api_view(["POST"])
 def revoke_request(request, request_id):
     anytimerrequest = AnyTimerRequest.objects.get(
-        requester_id=request.thalia_user["pk"], id=request_id
+        requester_id=request.user_id, id=request_id
     )
     anytimerrequest.delete()
     return Response(status=200)
@@ -193,11 +204,11 @@ def revoke_request(request, request_id):
 def fetch_requests(request, direction):
     if direction == "incoming":
         anytimerrequests = AnyTimerRequest.objects.filter(
-            recipient_id=request.thalia_user["pk"]
+            recipient_id=request.user_id
         )
     elif direction == "outgoing":
         anytimerrequests = AnyTimerRequest.objects.filter(
-            requester_id=request.thalia_user["pk"]
+            requester_id=request.user_id
         )
     else:
         return Response(status=400, data={"message": "Invalid direction"})
@@ -222,9 +233,9 @@ def fetch_requests(request, direction):
 @api_view(["GET"])
 def fetch_anytimers(request, direction):
     if direction == "incoming":
-        anytimers = AnyTimer.objects.filter(recipient_id=request.thalia_user["pk"])
+        anytimers = AnyTimer.objects.filter(recipient_id=request.user_id)
     elif direction == "outgoing":
-        anytimers = AnyTimer.objects.filter(owner_id=request.thalia_user["pk"])
+        anytimers = AnyTimer.objects.filter(owner_id=request.user_id)
     else:
         return Response(status=400, data={"message": "Invalid direction"})
 
@@ -250,8 +261,8 @@ def fetch_anytimers(request, direction):
 def fetch_proof(request, anytimer_id):
     proof = get_object_or_404(
         AnyTimerProof.objects.filter(
-            Q(anytimer__owner_id=request.thalia_user["pk"])
-            | Q(anytimer__recipient_id=request.thalia_user["pk"])
+            Q(anytimer__owner_id=request.user_id)
+            | Q(anytimer__recipient_id=request.user_id)
         ),
         anytimer=anytimer_id,
     )
@@ -259,6 +270,7 @@ def fetch_proof(request, anytimer_id):
     data = {
         "anytimer_id": proof.anytimer_id,
         "proof_file": request.build_absolute_uri(
+            settings.BASE_URL + 
             reverse("proof_sendfile", args=[anytimer_id])
         ),
         "description": proof.description,
@@ -273,10 +285,11 @@ def proof_sendfile(request, anytimer_id):
     """Sendfile view that checks authentication and then sends the file through nginx."""
     proof = get_object_or_404(
         AnyTimerProof.objects.filter(
-            Q(anytimer__owner_id=request.thalia_user["pk"])
-            | Q(anytimer__recipient_id=request.thalia_user["pk"])
+            Q(anytimer__owner_id=request.user_id)
+            | Q(anytimer__recipient_id=request.user_id)
         ),
         anytimer=anytimer_id,
     )
-
+    
+    print(proof.file.path)
     return sendfile(request, proof.file.path)
