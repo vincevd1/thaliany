@@ -17,6 +17,11 @@ export default function Member(thalia_user: ThaliaUser) {
         if(event.target.value == 'other' || showOtherTypeInputBox) setShowOtherTypeInputBox(!showOtherTypeInputBox);
     }
 
+    function resetPopup() {
+        setShowOtherTypeInputBox(false);
+        toggleOtherInputBox({ target: { value: 'beer' } } as ChangeEvent<HTMLSelectElement>)
+    }
+
     function giveOrRequestAnyForm(close: () => void) {
         return(
             <>
@@ -116,7 +121,7 @@ export default function Member(thalia_user: ThaliaUser) {
             </div>
 
             <div className="interaction-buttons">
-                <Popup title={"GIVE ANYTIMER TO " + thalia_user.profile.display_name.toUpperCase()} button={
+                <Popup onPopupClose ={resetPopup} title={"GIVE ANYTIMER TO " + thalia_user.profile.display_name.toUpperCase()} button={
                     <button className="interaction-button">
                         GIVE ANY
                     </button>
@@ -133,7 +138,7 @@ export default function Member(thalia_user: ThaliaUser) {
                     }
                 </Popup>
 
-                <Popup title={"REQUEST ANYTIMER FROM " + thalia_user.profile.display_name.toUpperCase() } button={
+                <Popup onPopupClose ={resetPopup} title={"REQUEST ANYTIMER FROM " + thalia_user.profile.display_name.toUpperCase() } button={
                     <button className="interaction-button">
                         REQUEST ANY
                     </button>

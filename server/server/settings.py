@@ -73,7 +73,7 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
-ALLOWED_HOSTS = ["localhost", "localhost:5173"] if DEBUG else [SITE_DOMAIN]
+ALLOWED_HOSTS = ["localhost", "localhost:5173","127.0.0.1"] if DEBUG else [SITE_DOMAIN]
 CSRF_TRUSTED_ORIGIN = [BASE_URL]
 
 ROOT_URLCONF = "server.urls"

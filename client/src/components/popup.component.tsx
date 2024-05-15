@@ -6,9 +6,10 @@ type PopupProps = {
     title: string,
     children: React.ReactNode | ((close: () => void, isOpen: boolean) => React.ReactNode), 
     button: React.ReactElement
+    onPopupClose: () => void
 }
 
-export default function Popup({ title, children, button }: PopupProps) {
+export default function Popup({ title, children, button, onPopupClose}: PopupProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     function openPopup() {
@@ -20,6 +21,7 @@ export default function Popup({ title, children, button }: PopupProps) {
         if(isOpen) { 
             getPopupRoot().remove()
             setIsOpen(false);
+            onPopupClose();
 
             document.body.style.overflow = "auto";
         }
