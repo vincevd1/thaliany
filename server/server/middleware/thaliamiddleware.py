@@ -10,7 +10,7 @@ class ThaliaMiddleware:
         if hasattr(request, 'path') and request.path.startswith("/api"):
             if('token' in request.COOKIES):
                 jwt_token = request.COOKIES["token"]
-                token_decoded = jwt.decode(jwt=jwt_token, key=settings.RSA_PUB_KEY, algorithms=["RS256"], audience=settings.CLIENT_ID)
+                token_decoded = jwt.decode(jwt=jwt_token, key=settings.RSA_PUB_KEY, algorithms=["RS256"], audience=settings.CLIENT_ID, options={"verify_exp": False})
                 
                 request.user_id = token_decoded["sub"]
             else:
