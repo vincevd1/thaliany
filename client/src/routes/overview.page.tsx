@@ -6,6 +6,8 @@ import './overview.page.css'
 import AnyTimerList from "../components/anytimerlist.component";
 import Loading from "../components/loading.component";
 import { useNotification } from "../components/notification.component";
+import { useCookies } from "react-cookie";
+import tutorial from "../components/tutorial.component";
 
 import { FaGithub } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
@@ -15,6 +17,7 @@ export default function Overview() {
     const [displayName, setDisplayName] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const notifications = useNotification();
+    const [cookies, setCookie, removeCookie] = useCookies(['TutorialCookie']);
 
     useEffect(() => {   
         function fetchUser() {
@@ -24,6 +27,8 @@ export default function Overview() {
                     setDisplayName(thaliaUser.profile.display_name);
         
                     setIsLoading(false);
+                    setCookie('TutorialCookie', '', { path: '/' });
+
                 })
                 .catch(() => {
                     notifications.notify("Something went wrong while trying to retrieve user!")
