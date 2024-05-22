@@ -98,6 +98,24 @@ export default function AnyTimerComponent({ AnyTimer, direction, type, state, re
         });
     }
 
+    function deleteAny() {
+        APIService.delete(
+            APIBase.BACKEND,
+            `/api/anytimers/confirmed/${AnyTimer.id}/delete/
+            `
+        ).then(() => {
+            if (amount == 1) {
+                remove(AnyTimer.id)
+            } else {
+                setAmount(amount - 1);
+            }
+            notifications.notify("Successfully deleted anytimer!");
+        })
+        .catch(() => {
+            notifications.notify("Something went wrong while trying to delete anytimer")
+        });
+    }
+
     async function postCompleteAny(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         // THIS TOOK ME 3 HOURS TO FIGURE OUT AND IT DOES NOT EVEN LOOK THAT COMPLICATED
@@ -208,6 +226,13 @@ export default function AnyTimerComponent({ AnyTimer, direction, type, state, re
                     type == 'confirmed' && direction == 'outgoing' && state == "unused" && (
                         <button className="anytimer-button" onClick={postUseAny}>
                             USE
+                        </button>
+                    )
+                }
+                {
+                    type == 'confirmed' && direction == 'outgoing' && state == "unused" && (
+                        <button className="anytimer-button" onClick={deleteAny}>
+                            DELETE
                         </button>
                     )
                 }

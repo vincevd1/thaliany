@@ -38,6 +38,11 @@ urlpatterns = [
         views.use_anytimer,
         name="use_anytimer",
     ),
+    path(
+        "anytimers/confirmed/<anytimer_id>/delete/",
+        views.remove_anytimer,
+        name="remove_anytimer",
+    ),
     path("proofs/<anytimer_id>/", views.fetch_proof, name="fetch_proof"),
     path("proofs/<anytimer_id>/file/", views.proof_sendfile, name="proof_sendfile"),
 ]

@@ -199,6 +199,15 @@ def revoke_request(request, request_id):
     anytimerrequest.delete()
     return Response(status=200)
 
+@api_view(["DELETE"])
+def remove_anytimer(request, anytimer_id):
+    anytimer = AnyTimer.objects.get(owner_id=request.user_id, id=anytimer_id)
+    if anytimer.amount > 1:
+        anytimer.amount -= 1
+        anytimer.save()
+    else:
+        anytimer.delete()
+    return Response(status=200)
 
 @api_view(["GET"])
 def fetch_requests(request, direction):
