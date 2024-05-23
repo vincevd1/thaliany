@@ -9,7 +9,6 @@ from django.urls import reverse
 from django_sendfile import sendfile
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.core.exceptions import ObjectDoesNotExist
 
 from .models import AnyTimer, AnyTimerProof, AnyTimerRequest, AnytimerStatus
 
