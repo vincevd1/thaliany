@@ -231,9 +231,32 @@ export default function AnyTimerComponent({ AnyTimer, direction, type, state, re
                 }
                 {
                     type == 'confirmed' && direction == 'outgoing' && state == "unused" && (
-                        <button className="anytimer-button" onClick={deleteAny}>
-                            DELETE
-                        </button>
+                        <Popup 
+                        title="Are you sure you want to delete this anytimer?" 
+                        button={
+                            <button className="anytimer-button delete-button">
+                                DELETE
+                            </button>
+                        }>
+                            {
+                                close => 
+                                <>
+                                    <div className="button-wrapper">
+                                        <button className="confirm-button confirmation-button" onClick={
+                                            () => {
+                                                close();
+                                                deleteAny();
+                                            }
+                                        }>
+                                            CONFIRM
+                                        </button>
+                                        <button className='cancel-button confirmation-button' onClick={close}>
+                                            CANCEL
+                                        </button>
+                                    </div>
+                                </>
+                            }
+                        </Popup>
                     )
                 }
                 {
