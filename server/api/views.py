@@ -35,15 +35,31 @@ def give_any(request, target_id):
             data={"message": "You cannot send an anytimer to yourself"}, status=400
         )
 
-    AnyTimer.objects.create(
+    anytimers = AnyTimer.objects.filter(
         owner_id=target_id,
         recipient_id=request.user_id,
-        owner_name=owner.json()["profile"]["display_name"],
-        recipient_name=recipient.json()["profile"]["display_name"],
-        amount=body["amount"],
         type=body["type"],
         description=body["description"],
     )
+    if anytimers:
+        sum = int(body["amount"])  # Convert amount to integer
+        last_anytimer = anytimers.last()  # Exclude the last anytimer
+        for anytimer in anytimers:
+            sum += anytimer.amount
+            if anytimer != last_anytimer:
+                anytimer.delete()
+        last_anytimer.amount = sum
+        last_anytimer.save()
+    else:
+        AnyTimer.objects.create(
+            owner_id=target_id,
+            recipient_id=request.user_id,
+            owner_name=owner.json()["profile"]["display_name"],
+            recipient_name=recipient.json()["profile"]["display_name"],
+            amount=body["amount"],
+            type=body["type"],
+            description=body["description"],
+        )
 
     return Response(status=200)
 
@@ -169,15 +185,31 @@ def accept_anytimer(request, request_id):
     anytimerrequest = AnyTimerRequest.objects.get(
         recipient_id=request.user_id, id=request_id
     )
-    AnyTimer.objects.create(
+    anytimers = AnyTimer.objects.filter(
         owner_id=anytimerrequest.requester_id,
         recipient_id=anytimerrequest.recipient_id,
-        owner_name=anytimerrequest.requester_name,
-        recipient_name=anytimerrequest.recipient_name,
-        amount=anytimerrequest.amount,
         type=anytimerrequest.type,
         description=anytimerrequest.description,
     )
+    if anytimers:
+        sum = anytimerrequest.amount
+        last_anytimer = anytimers.last()
+        for anytimer in anytimers:
+            sum += anytimer.amount
+            if anytimer != last_anytimer:
+                anytimer.delete()
+        last_anytimer.amount = sum
+        last_anytimer.save()
+    else:
+        AnyTimer.objects.create(
+            owner_id=anytimerrequest.requester_id,
+            recipient_id=anytimerrequest.recipient_id,
+            owner_name=anytimerrequest.requester_name,
+            recipient_name=anytimerrequest.recipient_name,
+            amount=anytimerrequest.amount,
+            type=anytimerrequest.type,
+            description=anytimerrequest.description,
+        )
     anytimerrequest.delete()
     return Response(status=200)
 
