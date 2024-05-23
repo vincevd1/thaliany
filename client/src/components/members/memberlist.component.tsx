@@ -12,7 +12,7 @@ export default function MemberList({ search }: { search: string }) {
 
     async function getMemberList() {
         let newMembers: Members = {} as Members;
-
+        if (!isFetching) return;
         try {
             // is there a next link then load it, if not but there are no members loaded yet this is the first load, load them otherwise there are no more members to load.
             if (next) {
@@ -45,6 +45,7 @@ export default function MemberList({ search }: { search: string }) {
     }
 
     useEffect(() => {
+        setIsFetching(true);
         getMemberList();
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll);
