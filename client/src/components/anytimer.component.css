@@ -121,6 +121,14 @@
     margin-bottom: 1em;
 }
 
+.delete-button {
+    background-color: var(--cancel-red);
+}
+
+.delete-button:hover {
+    background-color: var(--cancel-red-highlight);
+}
+
 @media (max-width: 1100px) {
     .anytimer, .anytimer-info {
         flex-direction: column;

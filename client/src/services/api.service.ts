@@ -38,7 +38,7 @@ class _APIService {
         const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         const values = new Uint32Array(48);
         window.crypto.getRandomValues(values);
-        
+
         let code_challenge = '';
         for (let i = 0; i < 48; i++) {
             code_challenge += charset[values[i] % charset.length];
@@ -60,13 +60,13 @@ class _APIService {
             const form: FormData = new FormData();
             const code_challenge = localStorage.getItem('code_challenge');
 
-            if(code_challenge) {
+            if (code_challenge) {
                 form.append('grant_type', 'authorization_code')
                 form.append('client_id', this.client_id)
                 form.append('code', code)
                 form.append('code_verifier', code_challenge)
                 form.append('redirect_uri', this.redirect_uri)
-        
+
                 axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
                     .then(res => {
                         localStorage.removeItem('code_challenge')
@@ -87,7 +87,7 @@ class _APIService {
             form.append('grant_type', 'refresh_token')
             form.append('client_id', this.client_id)
             form.append('refresh_token', refresh_token)
-    
+
             axios.postForm<Credentials>(`${this.concrexit_uri}${this.token_path}`, form)
                 .then(res => {
                     resolve(res.data)
@@ -102,7 +102,7 @@ class _APIService {
         return new Promise((resolve, reject) => {
             // console.info("GET")
             const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
-    
+
             axios.get(`${base_uri}${path}`, {
                 headers: {
                     'Authorization': `Bearer ${User.getAccessToken}`,
@@ -121,6 +121,23 @@ class _APIService {
             const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
 
             axios.post(`${base_uri}${path}`, data, {
+                headers: {
+                    'Authorization': `Bearer ${User.getAccessToken}`,
+                },
+            }).then(res => {
+                resolve(res.data)
+            }).catch(err => {
+                reject(err);
+            })
+        })
+    }
+
+    delete<T>(base: APIBase, path: string): Promise<T> {
+        return new Promise((resolve, reject) => {
+            // console.info("DELETE")
+            const base_uri = base == APIBase.CONCREXIT ? this.concrexit_uri : this.backend_uri;
+
+            axios.delete(`${base_uri}${path}`, {
                 headers: {
                     'Authorization': `Bearer ${User.getAccessToken}`,
                 },

@@ -98,6 +98,24 @@ export default function AnyTimerComponent({ AnyTimer, direction, type, state, re
         });
     }
 
+    function deleteAny() {
+        APIService.delete(
+            APIBase.BACKEND,
+            `/api/anytimers/confirmed/${AnyTimer.id}/delete/
+            `
+        ).then(() => {
+            if (amount == 1) {
+                remove(AnyTimer.id)
+            } else {
+                setAmount(amount - 1);
+            }
+            notifications.notify("Successfully deleted anytimer!");
+        })
+        .catch(() => {
+            notifications.notify("Something went wrong while trying to delete anytimer")
+        });
+    }
+
     async function postCompleteAny(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         // THIS TOOK ME 3 HOURS TO FIGURE OUT AND IT DOES NOT EVEN LOOK THAT COMPLICATED
@@ -209,6 +227,36 @@ export default function AnyTimerComponent({ AnyTimer, direction, type, state, re
                         <button className="anytimer-button" onClick={postUseAny}>
                             USE
                         </button>
+                    )
+                }
+                {
+                    type == 'confirmed' && direction == 'outgoing' && state == "unused" && (
+                        <Popup 
+                        title="Are you sure you want to delete this anytimer?" 
+                        button={
+                            <button className="anytimer-button delete-button">
+                                DELETE
+                            </button>
+                        }>
+                            {
+                                close => 
+                                <>
+                                    <div className="button-wrapper">
+                                        <button className="confirm-button confirmation-button" onClick={
+                                            () => {
+                                                close();
+                                                deleteAny();
+                                            }
+                                        }>
+                                            CONFIRM
+                                        </button>
+                                        <button className='cancel-button confirmation-button' onClick={close}>
+                                            CANCEL
+                                        </button>
+                                    </div>
+                                </>
+                            }
+                        </Popup>
                     )
                 }
                 {
