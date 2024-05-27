@@ -18,7 +18,7 @@ export default function Header() {
 
                     {
                         User.getIsLoggedIn ? (
-                            <button onClick={User.logout}>LOGOUT</button>
+                            <button onClick={() => User.logout()}>LOGOUT</button>
                         ) : (
                             <button onClick={() => User.login()}>LOGIN</button>
                         )
@@ -41,7 +41,7 @@ export default function Header() {
 
                         {
                             User.getIsLoggedIn ? (
-                                <button onClick={User.logout}>LOGOUT</button>
+                                <button onClick={() => User.logout()}>LOGOUT</button>
                             ) : (
                                 <button onClick={() => User.login()}>LOGIN</button>
                             )
