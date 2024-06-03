@@ -12,6 +12,7 @@ class _APIService {
     concrexit_uri: string;
     auth_path: string;
     token_path: string;
+    revoke_path: string;
     client_id: string;
     redirect_uri: string;
 
@@ -20,6 +21,7 @@ class _APIService {
         concrexit_uri: string,
         auth_path: string,
         token_path: string,
+        revoke_path: string,
         client_id: string,
         redirect_uri: string,
     ) {
@@ -27,6 +29,7 @@ class _APIService {
         this.concrexit_uri = concrexit_uri;
         this.auth_path = auth_path;
         this.token_path = token_path;
+        this.revoke_path = revoke_path;
         this.client_id = client_id;
         this.redirect_uri = redirect_uri;
     }
@@ -98,6 +101,27 @@ class _APIService {
         })
     }
 
+    revokeAccessToken(access_token: string): Promise<number> {
+        /**
+         * @param access_token The access token to be revoked
+         * @returns Status code of the request
+        */
+
+        return new Promise((resolve, reject) => {
+            const form: FormData = new FormData();
+            form.append("token", access_token);
+            form.append("client_id", this.client_id);
+
+            axios.postForm(`${this.concrexit_uri}${this.revoke_path}`, form)
+                .then(res => {
+                    resolve(res.status);
+                })
+                .catch(err => {
+                    reject(err);
+                })
+        })
+    }
+
     get<T>(base: APIBase, path: string): Promise<T> {
         return new Promise((resolve, reject) => {
             // console.info("GET")
@@ -155,6 +179,7 @@ const APIService = new _APIService(
     import.meta.env.VITE_CONCREXIT_URI,
     import.meta.env.VITE_AUTH_PATH,
     import.meta.env.VITE_TOKEN_PATH,
+    import.meta.env.VITE_REVOKE_PATH,
     import.meta.env.VITE_CLIENT_ID,
     import.meta.env.VITE_REDIRECT_URI,
 )

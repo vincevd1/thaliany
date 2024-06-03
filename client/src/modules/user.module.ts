@@ -1,4 +1,3 @@
-import Credentials from "../models/credentials.model";
 import { APIService } from "../services/api.service";
 
 class _User {
@@ -29,17 +28,20 @@ class _User {
         console.log('User initialized')
     }
 
-    async checkExpiration(): Promise<void> {
+    checkExpiration(): void {
         if(this.expires && this.refresh_token) {
             if(Date.now() > this.expires - 6000) {
-                const credentials: Credentials = await APIService.getAccessTokenFromRefreshToken(this.refresh_token)
-
-                this.setAccessToken = credentials.access_token;
-                this.setRefreshToken = credentials.refresh_token;
-                this.setExpiration = Date.now() + credentials.expires_in * 1000;
-
-                this.isLoggedIn = true;
-                window.location.reload();
+                APIService.getAccessTokenFromRefreshToken(this.refresh_token!).then(credentials => {
+                    this.setAccessToken = credentials.access_token;
+                    this.setRefreshToken = credentials.refresh_token;
+                    this.setExpiration = Date.now() + credentials.expires_in * 1000;
+        
+                    this.isLoggedIn = true;
+                    window.location.reload();
+                }).catch(() => {
+                    // Default to standard login if something goes wrong.
+                    this.login();
+                })
             } else {
                 this.isLoggedIn = true;
             }
@@ -55,8 +57,11 @@ class _User {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('expires')
-
-        window.location.href = '/';
+        
+        APIService.revokeAccessToken(this.access_token!)
+            .then(() => {
+                window.location.href = '/';
+            })
     }
 
     get getIsLoggedIn() {
