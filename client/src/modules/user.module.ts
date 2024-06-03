@@ -21,8 +21,10 @@ class _User {
             this.expires = null;
         } 
 
-        if(this.access_token && this.refresh_token && this.expires) {
+        if(this.access_token) {
             this.checkExpiration()
+            
+            if(!document.cookie.includes("token=")) this.logout();
         }
 
         console.log('User initialized')
@@ -58,10 +60,12 @@ class _User {
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('expires')
         
-        APIService.revokeAccessToken(this.access_token!)
+        if(this.access_token) {
+            APIService.revokeAccessToken(this.access_token)
             .then(() => {
                 window.location.href = '/';
             })
+        }
     }
 
     get getIsLoggedIn() {
